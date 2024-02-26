@@ -4,10 +4,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.2.32526.322
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuneTrove_presentation", "TuneTrove\TuneTrove_presentation.csproj", "{7747BA3D-21BC-48D0-8044-0C9ED2017C91}"
+	ProjectSection(ProjectDependencies) = postProject
+		{75E4E569-0B00-4E90-AAD9-846DA2DAF750} = {75E4E569-0B00-4E90-AAD9-846DA2DAF750}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuneTrove_Logic", "TuneTrove_Logic\TuneTrove_Logic.csproj", "{75E4E569-0B00-4E90-AAD9-846DA2DAF750}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuneTrove_DAL", "TuneTrove_DAL\TuneTrove_DAL.csproj", "{379CEF43-89CB-442C-B88F-BC39835BA5AC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{75E4E569-0B00-4E90-AAD9-846DA2DAF750} = {75E4E569-0B00-4E90-AAD9-846DA2DAF750}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
