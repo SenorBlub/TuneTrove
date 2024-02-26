@@ -12,7 +12,7 @@ public class Muzikant
         SetlistIds = setlistIds;
     }
 
-    public Muzikant(MuzikantDTO muzikantDto, List<int> bandIds, List<Nummer> nummerIds, List<Setlist> setlistIds)
+    public Muzikant(MuzikantDTO muzikantDto, List<int> bandIds, List<int> nummerIds, List<int> setlistIds)
     {
         Id = muzikantDto.Id;
         Name = muzikantDto.Name;

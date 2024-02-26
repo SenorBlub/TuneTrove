@@ -4,7 +4,7 @@ using TuneTrove_Logic.Models;
 using TuneTrove_Logic.Presentation_Interfaces;
 
 namespace TuneTrove_Logic.Services;
-
+// !TODO no HTTP verbs
 public class BandService : IBandService
 {
     private IBandRepository _bandRepository;
@@ -62,7 +62,6 @@ public class BandService : IBandService
 
     public void RemoveBand(int id)
     {
-        _bandRepository.RemoveBand(id);
         foreach (int muzikantId in _muzikantBandRepository.GetMuzikanten(id))
         {
             _muzikantBandRepository.RemoveConnection(muzikantId, id);
@@ -72,9 +71,10 @@ public class BandService : IBandService
         {
             _setlistRepository.RemoveSetlist(setlistId);
         }
+        _bandRepository.RemoveBand(id);
     }
 
-    public void EditBand(Band band)
+    public void EditBand(Band band) 
     {
         foreach (int muzikantId in _muzikantBandRepository.GetMuzikanten(band.Id))
         {
@@ -86,7 +86,7 @@ public class BandService : IBandService
             _muzikantBandRepository.PostConnection(muzikantId, band.Id);
         }
 
-        foreach (int bandSetlistId in band.SetlistIds)
+        foreach (int bandSetlistId in band.SetlistIds)//!TODO right idea, not right execution yet, what if new band setlist connections added?
         {
             bool delete = true;
             foreach (SetlistDTO setlistId in _setlistRepository.GetAllSetlists())
