@@ -6,13 +6,28 @@ namespace TuneTrove_Logic.Services;
 
 public class BandService : IBandService
 {
-    private IBandRepository _repository;
+    private IBandRepository _bandRepository;
+    private IMuzikantBandRepository _muzikantBandRepository;
+    private IMuzikantRepository _muzikantRepository;
+    private ISetlistRepository _setlistRepository;
     public List<Band> GetAllBands()
     {
         List<Band> BandList = new List<Band>();
-        foreach (BandDTO bandDTO in _repository.GetAllBands())
+        foreach (BandDTO bandDTO in _bandRepository.GetAllBands())
         {
-            BandList.Add(new Band(bandDTO));
+            
+            List<int> muzikantList = new List<int>();
+            foreach (int muzikantId in _muzikantBandRepository.GetMuzikanten(bandDTO.Id))
+            {
+                muzikantList.Add(muzikantId);
+            }
+
+            List<int> setlistList = new List<int>();
+            foreach (int setlistId in _setlistRepository.getSetlistsByBand(bandDTO.Id))
+            {
+                setlistList.Add(setlistId);
+            }
+            BandList.Add(new Band(bandDTO, muzikantList, setlistList));
         }
         return BandList;
     }

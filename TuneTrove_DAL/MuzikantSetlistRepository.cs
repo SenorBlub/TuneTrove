@@ -1,44 +1,34 @@
 ﻿using MySqlConnector;
 using TuneTrove_Logic.DAL_Interfaces;
-using TuneTrove_Logic.Models;
 
 namespace TuneTrove_DAL;
 
-public class SetlistRepository : ISetlistRepository
+public class MuzikantSetlistRepository : IMuzikantSetlistRepository
 {
     private string _connectionString;
     private readonly MySqlConnection _connection;
-    public SetlistRepository(string connectionString)
+    public MuzikantSetlistRepository(string connectionString)
     {
         _connectionString = connectionString;
         _connection = new MySqlConnection(_connectionString);
     }
-    public List<SetlistDTO> GetAllSetlists()
+
+    public List<int> GetSetlists(int muzikantId)
     {
         throw new NotImplementedException();
     }
 
-    public SetlistDTO GetSetlistById(int id)
+    public List<int> GetMuzikanten(int setlistId)
     {
         throw new NotImplementedException();
     }
 
-    public void PostSetlist(SetlistDTO setlist)
+    public void PostConnection(int muzikantId, int setlistId)
     {
         throw new NotImplementedException();
     }
 
-    public void RemoveSetlist(int id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void EditSetlist(SetlistDTO setlist)
-    {
-        throw new NotImplementedException();
-    }
-
-    public List<int> getSetlistsByBand(int bandId)
+    public void RemoveConnection(int muzikantId, int setlistId)
     {
         throw new NotImplementedException();
     }

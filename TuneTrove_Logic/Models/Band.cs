@@ -2,24 +2,24 @@
 
 public class Band
 {
-    public Band(int id, int bandLeider, List<int> setlists, List<Muzikant> bandLeden)
+    public Band(int id, int bandLeider, List<int> setlistIds, List<int> muzikantIds)
     {
         Id = id;
         BandLeider = bandLeider;
-        Setlists = setlists;
-        BandLeden = bandLeden;
+        SetlistIds = setlistIds;
+        MuzikantIds = muzikantIds;
     }
 
-    public Band(BandDTO bandDto)
+    public Band(BandDTO bandDto, List<int> muzikantIds, List<int> setlistIds)
     {
         Id = bandDto.Id;
         BandLeider = bandDto.BandLeider;
-        BandLeden = bandDto.BandLeden;
-        Setlists = bandDto.Setlists;
+        MuzikantIds = muzikantIds;
+        SetlistIds = setlistIds;
     }
 
     public int Id { get; set; }
     public int BandLeider { get; set; }
-    public List<int> Setlists { get; set; }
-    public List<Muzikant> BandLeden { get; set; }
+    public List<int> SetlistIds { get; set; }
+    public List<int> MuzikantIds { get; set; }
 }
