@@ -1,4 +1,5 @@
-﻿using TuneTrove_Logic.DAL_Interfaces;
+﻿using Microsoft.VisualBasic.FileIO;
+using TuneTrove_Logic.DAL_Interfaces;
 using TuneTrove_Logic.Models;
 using TuneTrove_Logic.Presentation_Interfaces;
 
@@ -8,7 +9,6 @@ public class BandService : IBandService
 {
     private IBandRepository _bandRepository;
     private IMuzikantBandRepository _muzikantBandRepository;
-    private IMuzikantRepository _muzikantRepository;
     private ISetlistRepository _setlistRepository;
     public List<Band> GetAllBands()
     {
@@ -34,21 +34,70 @@ public class BandService : IBandService
 
     public Band GetBandById(int id)
     {
-        return new Band(_repository.GetBandById(id));
+        BandDTO bandDto = _bandRepository.GetBandById(id);
+
+        List<int> muzikantList = new List<int>();
+        foreach (int muzikantId in _muzikantBandRepository.GetMuzikanten(id))
+        {
+            muzikantList.Add(muzikantId);
+        }
+
+        List<int> setlistList = new List<int>();
+        foreach (int setlistId in _setlistRepository.getSetlistsByBand(id))
+        {
+            setlistList.Add(setlistId);
+        }
+
+        return new Band(bandDto, setlistList, muzikantList);
     }
 
     public void PostBand(Band band)
     {
-        _repository.PostBand(new BandDTO(band));
+        _bandRepository.PostBand(new BandDTO(band));
+        foreach (int muzikantId in band.MuzikantIds)
+        {
+            _muzikantBandRepository.PostConnection(muzikantId, band.Id);
+        }
     }
 
     public void RemoveBand(int id)
     {
-        _repository.RemoveBand(id);
+        _bandRepository.RemoveBand(id);
+        foreach (int muzikantId in _muzikantBandRepository.GetMuzikanten(id))
+        {
+            _muzikantBandRepository.RemoveConnection(muzikantId, id);
+        }
+
+        foreach (int setlistId in _setlistRepository.getSetlistsByBand(id))
+        {
+            _setlistRepository.RemoveSetlist(setlistId);
+        }
     }
 
     public void EditBand(Band band)
     {
-        _repository.EditBand(new BandDTO(band));
+        foreach (int muzikantId in _muzikantBandRepository.GetMuzikanten(band.Id))
+        {
+            _muzikantBandRepository.RemoveConnection(muzikantId, band.Id);
+        }
+
+        foreach (int muzikantId in band.MuzikantIds)
+        {
+            _muzikantBandRepository.PostConnection(muzikantId, band.Id);
+        }
+
+        foreach (int bandSetlistId in band.SetlistIds)
+        {
+            bool delete = true;
+            foreach (SetlistDTO setlistId in _setlistRepository.GetAllSetlists())
+            {
+                if (setlistId.Id == band.Id)
+                    delete = false;
+            }
+            if(delete)
+                _setlistRepository.RemoveSetlist(bandSetlistId);
+        }
+
+        _bandRepository.EditBand(new BandDTO(band));
     }
 }
