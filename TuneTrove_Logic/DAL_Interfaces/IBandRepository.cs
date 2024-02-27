@@ -9,4 +9,6 @@ public interface IBandRepository
     void PostBand(BandDTO band);
     void RemoveBand(int id);
     void EditBand(BandDTO band);
+
+    List<int> GetBySetlist(int id);
 }

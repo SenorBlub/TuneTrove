@@ -52,4 +52,9 @@ public class BandRepository : IBandRepository
     {
         throw new NotImplementedException();
     }
+
+    public List<int> GetSetlistIds()
+    {
+        throw new NotImplementedException();
+    }
 }
