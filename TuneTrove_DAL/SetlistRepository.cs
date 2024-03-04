@@ -15,31 +15,82 @@ public class SetlistRepository : ISetlistRepository
     }
     public List<SetlistDTO> GetAllSetlists()
     {
-        throw new NotImplementedException();
+        _connection.Open();
+        string query = "SELECT * FROM Setlist";
+        using MySqlCommand command = new MySqlCommand(query, _connection);
+        using MySqlDataReader reader = command.ExecuteReader();
+        List<SetlistDTO> setlists = new List<SetlistDTO>();
+        while (reader.Read())
+        {
+            setlists.Add(new SetlistDTO((int)reader["Id"], (DateTime)reader["Datum"]));
+        }
+        _connection.Close();
+        return setlists;
     }
 
     public SetlistDTO GetSetlistById(int id)
     {
-        throw new NotImplementedException();
+        _connection.Open();
+        string query = "SELECT * FROM Setlist WHERE Id = @id";
+        using MySqlCommand command = new MySqlCommand(query, _connection);
+        command.Parameters.AddWithValue("@id", id);
+        using MySqlDataReader reader = command.ExecuteReader();
+        SetlistDTO setlist = null;
+        while (reader.Read())
+        {
+            setlist = new SetlistDTO((int)reader["Id"], (DateTime)reader["Datum"]);
+        }
+        _connection.Close();
+        return setlist;
     }
 
-    public void PostSetlist(SetlistDTO setlist)
+    public void PostSetlist(SetlistDTO setlist, int bandId)
     {
-        throw new NotImplementedException();
+        _connection.Open();
+        string query = "INSERT INTO Setlist (Id, Datum, Band_Id) VALUES (@id, @datum, @bandId)";
+        using MySqlCommand command = new MySqlCommand(query, _connection);
+        command.Parameters.AddWithValue("@id", setlist.Id);
+        command.Parameters.AddWithValue("@datum", setlist.Datum);
+        command.Parameters.AddWithValue("@bandId", bandId);
+        command.ExecuteNonQuery();
+        _connection.Close();
     }
 
     public void RemoveSetlist(int id)
     {
-        throw new NotImplementedException();
+        _connection.Open();
+        string query = "DELETE * FROM Setlist WHERE Id = @id";
+        using MySqlCommand command = new MySqlCommand(query, _connection);
+        command.Parameters.AddWithValue("@id", id);
+        command.ExecuteNonQuery();
+        _connection.Close();
     }
 
-    public void EditSetlist(SetlistDTO setlist)
+    public void EditSetlist(SetlistDTO setlist, int bandId)
     {
-        throw new NotImplementedException();
+        _connection.Open();
+        string query = "UPDATE Setlist SET Datum = @datum, Band_Id = @bandId, WHERE Id = @id";
+        using MySqlCommand command = new MySqlCommand(query, _connection);
+        command.Parameters.AddWithValue("@id", setlist.Id);
+        command.Parameters.AddWithValue("@datum", setlist.Datum);
+        command.Parameters.AddWithValue("@bandId", bandId);
+        command.ExecuteNonQuery();
+        _connection.Close();
     }
 
     public List<int> getSetlistsByBand(int bandId)
     {
-        throw new NotImplementedException();
+        _connection.Open();
+        string query = "SELECT * FROM Setlist WHERE Band_Id = @bandId";
+        using MySqlCommand command = new MySqlCommand(query, _connection);
+        command.Parameters.AddWithValue("@bandId", bandId);
+        using MySqlDataReader reader = command.ExecuteReader();
+        List<int> setlists = new List<int>();
+        while (reader.Read())
+        {
+            setlists.Add((int)reader["Id"]);
+        }
+        _connection.Close();
+        return setlists;
     }
 }

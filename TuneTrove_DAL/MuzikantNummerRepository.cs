@@ -7,7 +7,7 @@ public class MuzikantNummerRepository : IMuzikantNummerRepository
 {
     private string _connectionString;
     private readonly MySqlConnection _connection;
-    public MuzikantBandRepository(string connectionString)
+    public MuzikantNummerRepository(string connectionString)
     {
         _connectionString = connectionString;
         _connection = new MySqlConnection(_connectionString);
@@ -15,21 +15,57 @@ public class MuzikantNummerRepository : IMuzikantNummerRepository
 
     public List<int> GetNummers(int muzikantId)
     {
-        throw new NotImplementedException();
+        _connection.Open();
+        string query = "Select * FROM MuzikantNummer WHERE Muzikant_Id = @muzikantId";
+        using MySqlCommand command = new MySqlCommand(query, _connection);
+        command.Parameters.AddWithValue("@muzikantId", muzikantId);
+        using MySqlDataReader reader = command.ExecuteReader();
+
+        List<int> Nummers = new List<int>();
+        while (reader.Read())
+        {
+            Nummers.Add((int)reader["Nummer_Id"]);
+        }
+
+        return Nummers;
     }
 
-    public List<int> GetMuzikanten(int nummerId)
+    public List<int> GetMuzkanten(int NummerId)
     {
-        throw new NotImplementedException();
+        _connection.Open();
+        string query = "Select * FROM MuzikantNummer WHERE Nummer_Id = @NummerId";
+        using MySqlCommand command = new MySqlCommand(query, _connection);
+        command.Parameters.AddWithValue("@NummerId", NummerId);
+        using MySqlDataReader reader = command.ExecuteReader();
+
+        List<int> setlists = new List<int>();
+        while (reader.Read())
+        {
+            setlists.Add((int)reader["Muzikant_Id"]);
+        }
+
+        return setlists;
     }
 
-    public void PostConnection(int muzikantId, int nummerId)
+    public void PostConnection(int muzikantId, int NummerId)
     {
-        throw new NotImplementedException();
+        _connection.Open();
+        string query = "INSERT INTO MuzikantNummer (Nummer_Id, Muzikant_Id) VALUES (@NummerId, @muzikantId)";
+        using MySqlCommand command = new MySqlCommand(query, _connection);
+        command.Parameters.AddWithValue("@NummerId", NummerId);
+        command.Parameters.AddWithValue("@muzikantId", muzikantId);
+        command.ExecuteNonQuery();
+        _connection.Close();
     }
 
-    public void RemoveConnection(int muzikantId, int nummerId)
+    public void RemoveConnection(int muzikantId, int NummerId)
     {
-        throw new NotImplementedException();
+        _connection.Open();
+        string query = "DELETE * FROM MuzikantNummer WHERE Nummer_Id = @NummerId AND Muzikant_Id = @muzikantId";
+        using MySqlCommand command = new MySqlCommand(query, _connection);
+        command.Parameters.AddWithValue("@NummerId", NummerId);
+        command.Parameters.AddWithValue("@muzikantId", muzikantId);
+        command.ExecuteNonQuery();
+        _connection.Close();
     }
 }

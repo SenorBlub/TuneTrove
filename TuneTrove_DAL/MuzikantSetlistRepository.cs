@@ -15,21 +15,57 @@ public class MuzikantSetlistRepository : IMuzikantSetlistRepository
 
     public List<int> GetSetlists(int muzikantId)
     {
-        throw new NotImplementedException();
+        _connection.Open();
+        string query = "Select * FROM MuzikantSetlist WHERE Muzikant_Id = @muzikantId";
+        using MySqlCommand command = new MySqlCommand(query, _connection);
+        command.Parameters.AddWithValue("@muzikantId", muzikantId);
+        using MySqlDataReader reader = command.ExecuteReader();
+
+        List<int> Setlists = new List<int>();
+        while (reader.Read())
+        {
+            Setlists.Add((int)reader["Setlist_Id"]);
+        }
+
+        return Setlists;
     }
 
-    public List<int> GetMuzikanten(int setlistId)
+    public List<int> GetMuzikanten(int SetlistId)
     {
-        throw new NotImplementedException();
+        _connection.Open();
+        string query = "Select * FROM MuzikantSetlist WHERE Setlist_Id = @SetlistId";
+        using MySqlCommand command = new MySqlCommand(query, _connection);
+        command.Parameters.AddWithValue("@SetlistId", SetlistId);
+        using MySqlDataReader reader = command.ExecuteReader();
+
+        List<int> setlists = new List<int>();
+        while (reader.Read())
+        {
+            setlists.Add((int)reader["Muzikant_Id"]);
+        }
+
+        return setlists;
     }
 
-    public void PostConnection(int muzikantId, int setlistId)
+    public void PostConnection(int muzikantId, int SetlistId)
     {
-        throw new NotImplementedException();
+        _connection.Open();
+        string query = "INSERT INTO MuzikantSetlist (Setlist_Id, Muzikant_Id) VALUES (@SetlistId, @muzikantId)";
+        using MySqlCommand command = new MySqlCommand(query, _connection);
+        command.Parameters.AddWithValue("@SetlistId", SetlistId);
+        command.Parameters.AddWithValue("@muzikantId", muzikantId);
+        command.ExecuteNonQuery();
+        _connection.Close();
     }
 
-    public void RemoveConnection(int muzikantId, int setlistId)
+    public void RemoveConnection(int muzikantId, int SetlistId)
     {
-        throw new NotImplementedException();
+        _connection.Open();
+        string query = "DELETE * FROM MuzikantSetlist WHERE Setlist_Id = @SetlistId AND Muzikant_Id = @muzikantId";
+        using MySqlCommand command = new MySqlCommand(query, _connection);
+        command.Parameters.AddWithValue("@SetlistId", SetlistId);
+        command.Parameters.AddWithValue("@muzikantId", muzikantId);
+        command.ExecuteNonQuery();
+        _connection.Close();
     }
 }
