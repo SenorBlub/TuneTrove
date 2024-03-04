@@ -1,4 +1,4 @@
-﻿using TuneTrove_Logic.Models;
+﻿using TuneTrove_Logic.DTO;
 
 namespace TuneTrove_Logic.DAL_Interfaces;
 

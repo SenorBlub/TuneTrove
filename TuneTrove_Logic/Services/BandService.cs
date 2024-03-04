@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualBasic.FileIO;
 using TuneTrove_Logic.DAL_Interfaces;
+using TuneTrove_Logic.DTO;
 using TuneTrove_Logic.Models;
 using TuneTrove_Logic.Presentation_Interfaces;
 
@@ -86,7 +87,7 @@ public class BandService : IBandService
             _muzikantBandRepository.PostConnection(muzikantId, band.Id);
         }
 
-        foreach (int bandSetlistId in band.SetlistIds)//!TODO right idea, not right execution yet, what if new band setlist connections added?
+        foreach (int bandSetlistId in band.SetlistIds)//!TODO right idea, not right execution yet(maybe), what if new band setlist connections added?
         {
             bool delete = true;
             foreach (SetlistDTO setlistId in _setlistRepository.GetAllSetlists())

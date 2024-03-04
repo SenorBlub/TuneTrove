@@ -1,4 +1,4 @@
-﻿namespace TuneTrove_Logic.Models;
+﻿namespace TuneTrove_Logic.DTO;
 
 public class NummerSetlistDTO
 {

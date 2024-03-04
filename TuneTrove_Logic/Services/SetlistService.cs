@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using TuneTrove_Logic.DAL_Interfaces;
+using TuneTrove_Logic.DTO;
 using TuneTrove_Logic.Models;
 using TuneTrove_Logic.Presentation_Interfaces;
 
@@ -30,7 +31,7 @@ public class SetlistService : ISetlistService
             }
 
             List<int> bandIds = new List<int>();
-            foreach (int bandId in _bandRepository.GetBySetlist(setlistDto.Id))
+            foreach (int bandId in _bandSetlistRepository.GetBands(setlistDto.Id))
             {
                 bandIds.Add(bandId);
             }
@@ -54,7 +55,7 @@ public class SetlistService : ISetlistService
         }
 
         List<int> bandIds = new List<int>();
-        foreach (int bandId in _bandRepository.GetBySetlist(id))
+        foreach (int bandId in _bandSetlistRepository.GetBands(id))
         {
             bandIds.Add(bandId);
         }
@@ -63,7 +64,8 @@ public class SetlistService : ISetlistService
 
     public void PostSetlist(Setlist setlist)
     {
-        _setlistRepository.PostSetlist(new SetlistDTO(setlist));
+        foreach(int bandId in setlist.BandIds)
+            _setlistRepository.PostSetlist(new SetlistDTO(setlist), bandId);
         foreach (int muzikantId in setlist.MuzikantIds)
         {
             _muzikantSetlistRepository.PostConnection(muzikantId, setlist.Id);
@@ -130,6 +132,7 @@ public class SetlistService : ISetlistService
         {
             _bandSetlistRepository.PostConnection(setlist.Id, bandId);
         }
-        _setlistRepository.EditSetlist(new SetlistDTO(setlist));
+        foreach (int bandId in setlist.BandIds)
+            _setlistRepository.EditSetlist(new SetlistDTO(setlist), bandId);
     }
 }

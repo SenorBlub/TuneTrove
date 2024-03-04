@@ -1,4 +1,5 @@
 ﻿using TuneTrove_Logic.DAL_Interfaces;
+using TuneTrove_Logic.DTO;
 using TuneTrove_Logic.Models;
 using TuneTrove_Logic.Presentation_Interfaces;
 
