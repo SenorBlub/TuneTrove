@@ -1,4 +1,11 @@
 ﻿@page
+@using TuneTrove_presentation.Pages
 @model TuneTrove_presentation.Pages.BandPageModel
 @{
+	ViewData["Title"] = Model.title;
 }
+
+<div class="text-center">
+	<h1 class="display-4">@Model.title</h1>
+	<p>Temp.</p>
+</div>

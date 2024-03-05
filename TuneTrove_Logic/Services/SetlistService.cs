@@ -13,6 +13,15 @@ public class SetlistService : ISetlistService
     private IMuzikantSetlistRepository _muzikantSetlistRepository;
     private IBandRepository _bandRepository;
     private IBandSetlistRepository _bandSetlistRepository;
+
+    public SetlistService(ISetlistRepository setlistRepository, INummerSetlistRepository nummerSetlistRepository, IMuzikantSetlistRepository muzikantSetlistRepository, IBandRepository bandRepository, IBandSetlistRepository bandSetlistRepository)
+    {
+        _setlistRepository = setlistRepository;
+        _nummerSetlistRepository = nummerSetlistRepository;
+        _bandRepository = bandRepository;
+        _muzikantSetlistRepository = muzikantSetlistRepository;
+        _bandSetlistRepository = bandSetlistRepository;
+    }
     public List<Setlist> GetAllSetlists()
     {
         List<Setlist> setlistList = new List<Setlist>();

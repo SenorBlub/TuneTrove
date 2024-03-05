@@ -11,6 +11,15 @@ public class MuzikantService : IMuzikantService
     private IMuzikantBandRepository _muzikantBandRepository;
     private IMuzikantNummerRepository _muzikantNummerRepository;
     private IMuzikantSetlistRepository _muzikantSetlistRepository;
+
+    public MuzikantService(IMuzikantRepository muzikantRepository, IMuzikantBandRepository muzikantBandRepository, IMuzikantNummerRepository muzikantNummerRepository, IMuzikantSetlistRepository muzikantSetlistRepository)
+    {
+        _muzikantRepository = muzikantRepository;
+        _muzikantBandRepository = muzikantBandRepository;
+        _muzikantNummerRepository = muzikantNummerRepository;
+        _muzikantSetlistRepository = muzikantSetlistRepository;
+    }
+
     public List<Muzikant> GetAllMuzikanten()
     {
         List<Muzikant> MuzikantList = new List<Muzikant>();

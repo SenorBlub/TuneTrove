@@ -11,6 +11,14 @@ public class BandService : IBandService
     private IBandRepository _bandRepository;
     private IMuzikantBandRepository _muzikantBandRepository;
     private ISetlistRepository _setlistRepository;
+
+    public BandService(IBandRepository bandRepository, IMuzikantBandRepository muzikantBandRepository, ISetlistRepository setlistRepository)
+    {
+        _bandRepository = bandRepository;
+        _muzikantBandRepository = muzikantBandRepository;
+        _setlistRepository = setlistRepository;
+    }
+
     public List<Band> GetAllBands()
     {
         List<Band> BandList = new List<Band>();
@@ -100,5 +108,18 @@ public class BandService : IBandService
         }
 
         _bandRepository.EditBand(new BandDTO(band));
+    }
+
+    public List<Band> GetMuzikantRelatedBands(int muzikantId)
+    {
+        List<int> bandIds = _muzikantBandRepository.GetBands(muzikantId);
+
+        List<Band> bands = new List<Band>();
+        foreach (int bandId in bandIds)
+        {
+            bands.Add(GetBandById(bandId));
+        }
+
+        return bands;
     }
 }

@@ -10,6 +10,13 @@ public class NummerService : INummerService
     private INummerRepository _nummerRepository;
     private INummerSetlistRepository _nummerSetlistRepository;
     private IMuzikantNummerRepository _muzikantNummerRepository;
+
+    public NummerService(INummerRepository nummerRepository, INummerSetlistRepository nummerSetlistRepository, IMuzikantNummerRepository muzikantNummerRepository)
+    {
+        _nummerSetlistRepository = nummerSetlistRepository;
+        _muzikantNummerRepository = muzikantNummerRepository;
+        _nummerRepository = nummerRepository;
+    }
     public List<Nummer> GetAllNummers()
     {
         List<Nummer> NummerList = new List<Nummer>();
