@@ -1,4 +1,5 @@
-﻿using MySqlConnector;
+﻿using Microsoft.Extensions.Configuration;
+using MySqlConnector;
 using TuneTrove_Logic.DAL_Interfaces;
 using TuneTrove_Logic.DTO;
 
@@ -8,9 +9,9 @@ public class SetlistRepository : ISetlistRepository
 {
     private string _connectionString;
     private readonly MySqlConnection _connection;
-    public SetlistRepository(string connectionString)
+    public SetlistRepository(IConfiguration configuration)
     {
-        _connectionString = connectionString;
+        _connectionString = configuration.GetConnectionString("connectionString");
         _connection = new MySqlConnection(_connectionString);
     }
     public List<SetlistDTO> GetAllSetlists()

@@ -1,4 +1,5 @@
-﻿using MySqlConnector;
+﻿using Microsoft.Extensions.Configuration;
+using MySqlConnector;
 using TuneTrove_Logic.DAL_Interfaces;
 
 namespace TuneTrove_DAL;
@@ -7,9 +8,9 @@ public class NummerSetlistRepository : INummerSetlistRepository
 {
     private string _connectionString;
     private readonly MySqlConnection _connection;
-    public NummerSetlistRepository(string connectionString)
+    public NummerSetlistRepository(IConfiguration configuration)
     {
-        _connectionString = connectionString;
+        _connectionString = configuration.GetConnectionString("connectionString");
         _connection = new MySqlConnection(_connectionString);
     }
 

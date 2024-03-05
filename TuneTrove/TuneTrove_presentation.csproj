@@ -17,16 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TuneTrove_DAL\TuneTrove_DAL.csproj" />
     <ProjectReference Include="..\TuneTrove_Logic\TuneTrove_Logic.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckBuilt Include="wwwroot/css/site.css" Set="Css" />
-    <UpToDateCheckBuilt Include="tailwind.config.js" Set="Css" />
-  </ItemGroup>
-
-  <Target Name="Tailwind" BeforeTargets="Build">
-    <Exec Command="npm run css:build" />
-  </Target>
 
 </Project>

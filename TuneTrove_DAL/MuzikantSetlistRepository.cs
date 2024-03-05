@@ -1,4 +1,5 @@
-﻿using MySqlConnector;
+﻿using Microsoft.Extensions.Configuration;
+using MySqlConnector;
 using TuneTrove_Logic.DAL_Interfaces;
 
 namespace TuneTrove_DAL;
@@ -7,9 +8,9 @@ public class MuzikantSetlistRepository : IMuzikantSetlistRepository
 {
     private string _connectionString;
     private readonly MySqlConnection _connection;
-    public MuzikantSetlistRepository(string connectionString)
+    public MuzikantSetlistRepository(IConfiguration configuration)
     {
-        _connectionString = connectionString;
+        _connectionString = configuration.GetConnectionString("connectionString");
         _connection = new MySqlConnection(_connectionString);
     }
 

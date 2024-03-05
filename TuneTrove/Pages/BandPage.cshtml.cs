@@ -1,22 +1,23 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TuneTrove_Logic.Models;
+using TuneTrove_Logic.Presentation_Interfaces;
 using TuneTrove_Logic.Services;
 
 namespace TuneTrove_presentation.Pages
 {
     public class BandPageModel : PageModel
     {
-        private BandService _bandService;
-        private SetlistService _setlistService;
-        private NummerService _nummerService;
-        private MuzikantService _muzikantService;
+        private IBandService _bandService;
+        private ISetlistService _setlistService;
+        private INummerService _nummerService;
+        private IMuzikantService _muzikantService;
 
         public BandPageModel(
-            BandService bandService,
-            SetlistService setlistService,
-            MuzikantService muzikantService,
-            NummerService nummerService)
+            IBandService bandService,
+            ISetlistService setlistService,
+            IMuzikantService muzikantService,
+            INummerService nummerService)
         {
             _bandService = bandService;
             _setlistService = setlistService;
@@ -24,18 +25,26 @@ namespace TuneTrove_presentation.Pages
             _muzikantService = muzikantService;
         }
 
-        public Band band;
+        public List<Band> bands;
+
+        public Band temporaryBand;
 
         public string title;
 
         public void OnGet()
         {
             title = "All bands";
+
+            bands = new List<Band>();
+            foreach (Band band in _bandService.GetAllBands())
+            {
+                bands.Add(band);
+            }
         }
 
-        public void OnGet(int muzikantId)
+        public void OnPost()
         {
-            title = "All bands for " + _muzikantService.GetMuzikantById(muzikantId).Name + "";
+
         }
     }
 }

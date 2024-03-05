@@ -1,4 +1,24 @@
+using TuneTrove_DAL;
+using TuneTrove_Logic.DAL_Interfaces;
+using TuneTrove_Logic.Presentation_Interfaces;
+using TuneTrove_Logic.Services;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<IBandRepository, BandRepository>();
+builder.Services.AddScoped<IBandSetlistRepository, BandSetlistRepository>();
+builder.Services.AddScoped<IMuzikantBandRepository, MuzikantBandRepository>();
+builder.Services.AddScoped<IMuzikantNummerRepository, MuzikantNummerRepository>();
+builder.Services.AddScoped<IMuzikantRepository, MuzikantRepository>();
+builder.Services.AddScoped<IMuzikantSetlistRepository, MuzikantSetlistRepository>();
+builder.Services.AddScoped<INummerRepository, NummerRepository>();
+builder.Services.AddScoped<INummerSetlistRepository, NummerSetlistRepository>();
+builder.Services.AddScoped<ISetlistRepository, SetlistRepository>();
+
+builder.Services.AddScoped<IBandService, BandService>();
+builder.Services.AddScoped<IMuzikantService, MuzikantService>();
+builder.Services.AddScoped<INummerService, NummerService>();
+builder.Services.AddScoped<ISetlistService, SetlistService>();
 
 // Add services to the container.
 builder.Services.AddRazorPages();

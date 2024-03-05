@@ -1,4 +1,5 @@
-﻿using MySqlConnector;
+﻿using Microsoft.Extensions.Configuration;
+using MySqlConnector;
 using TuneTrove_Logic.DAL_Interfaces;
 using TuneTrove_Logic.DTO;
 
@@ -8,9 +9,9 @@ public class MuzikantRepository : IMuzikantRepository
 {
     private string _connectionString;
     private readonly MySqlConnection _connection;
-    public MuzikantRepository(string connectionString)
+    public MuzikantRepository(IConfiguration configuration)
     {
-        _connectionString = connectionString;
+        _connectionString = configuration.GetConnectionString("connectionString");
         _connection = new MySqlConnection(_connectionString);
     }
     public List<MuzikantDTO> GetAllMuzikanten()

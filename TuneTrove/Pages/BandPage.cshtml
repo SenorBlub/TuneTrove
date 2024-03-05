@@ -1,5 +1,7 @@
 ﻿@page
 @using TuneTrove_presentation.Pages
+@using TuneTrove_Logic.Models
+@using TuneTrove_DAL
 @model TuneTrove_presentation.Pages.BandPageModel
 @{
 	ViewData["Title"] = Model.title;
@@ -8,4 +10,26 @@
 <div class="text-center">
 	<h1 class="display-4">@Model.title</h1>
 	<p>Temp.</p>
+	<table>
+		<tr>
+			<th>Id</th>
+			<th>Band leider</th>
+			<th>Muzikanten</th>
+			<th>Setlists</th>
+		</tr>
+		@{
+
+			foreach (Band band in Model.bands)
+			{
+				<tr>
+					<td>@band.Id</td>
+					<td>@band.BandLeider</td>
+					<td>@band.MuzikantIds</td>
+					<td>@band.SetlistIds</td>
+				</tr>
+			}
+		}
+	</table>
+	
+	@* design for nice looking band creator forms, use partial views too to reuse *@
 </div>

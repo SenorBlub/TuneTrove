@@ -1,6 +1,7 @@
 ﻿using MySqlConnector;
 using TuneTrove_Logic.DAL_Interfaces;
 using TuneTrove_Logic.DTO;
+using Microsoft.Extensions.Configuration;
 
 namespace TuneTrove_DAL;
 
@@ -8,9 +9,9 @@ public class BandRepository : IBandRepository
 {
     private string _connectionString;
     private readonly MySqlConnection _connection;
-    public BandRepository(string connectionString)
+    public BandRepository(IConfiguration configuration)
     {
-        _connectionString = connectionString;
+        _connectionString = configuration.GetConnectionString("connectionString");
         _connection = new MySqlConnection(_connectionString);
     }
 
