@@ -30,7 +30,7 @@ public class MuzikantBandRepository : IMuzikantBandRepository
         return bands;
     }
 
-    public List<int> GetMuzkanten(int bandId)
+    public List<int> GetMuzikanten(int bandId)
     {
         _connection.Open();
         string query = "Select * FROM MuzikantBand WHERE Band_Id = @bandId";

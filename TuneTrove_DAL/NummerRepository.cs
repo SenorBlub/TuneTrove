@@ -38,7 +38,7 @@ public class NummerRepository : INummerRepository
         NummerDTO nummer = null;
         while (reader.Read())
         {
-            nummer = new NummerDTO((int)reader["Id"], reader["Naam"].ToString(), (int)reader["Lengte"], reader["Artiest"].ToString()));
+            nummer = new NummerDTO((int)reader["Id"], reader["Naam"].ToString(), (int)reader["Lengte"], reader["Artiest"].ToString());
         }
         _connection.Close();
         return nummer;
