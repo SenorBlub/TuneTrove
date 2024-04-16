@@ -26,7 +26,8 @@ public class NummerRepository : INummerRepository
         {
             nummers.Add(new NummerDTO((int)reader["Id"], reader["Naam"].ToString(), (int)reader["Lengte"], reader["Artiest"].ToString()));
         }
-        return nummers;
+        _connection.Close();
+		return nummers;
     }
 
     public NummerDTO GetNummerById(int id)
@@ -93,6 +94,7 @@ public class NummerRepository : INummerRepository
         {
             nummers.Add(new NummerDTO((int)reader["Id"], reader["Naam"].ToString(), (int)reader["Lengte"], reader["Artiest"].ToString()));
         }
-        return nummers;
+        _connection.Close();
+		return nummers;
     }
 }

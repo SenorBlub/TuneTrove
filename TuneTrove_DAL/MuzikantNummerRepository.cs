@@ -27,8 +27,8 @@ public class MuzikantNummerRepository : IMuzikantNummerRepository
         {
             Nummers.Add((int)reader["Nummer_Id"]);
         }
-
-        return Nummers;
+        _connection.Close();
+		return Nummers;
     }
 
     public List<int> GetMuzikanten(int NummerId)
@@ -44,8 +44,8 @@ public class MuzikantNummerRepository : IMuzikantNummerRepository
         {
             setlists.Add((int)reader["Muzikant_Id"]);
         }
-
-        return setlists;
+        _connection.Close();
+		return setlists;
     }
 
     public void PostConnection(int muzikantId, int NummerId)

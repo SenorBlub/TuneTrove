@@ -19,17 +19,29 @@
 		</tr>
 		@{
 
-			foreach (Band band in Model.bands)
+			foreach (Band band in Model.Bands)
 			{
 				<tr>
 					<td>@band.Id</td>
 					<td>@band.BandLeider</td>
-					<td>@band.MuzikantIds</td>
-					<td>@band.SetlistIds</td>
+					<td>
+						@foreach (int id in band.MuzikantIds)
+						{
+							<p>@id - </p>
+						}
+					</td>
+					<td>					
+						@foreach (int id in band.SetlistIds)
+						{
+						    <p>@id - </p>
+						}
+					</td>
 				</tr>
 			}
 		}
 	</table>
-	
+
 	@* design for nice looking band creator forms, use partial views too to reuse *@
+	
+	@await Html.PartialAsync("Shared/PartialViews/PartialBandCreator", this.Model)
 </div>

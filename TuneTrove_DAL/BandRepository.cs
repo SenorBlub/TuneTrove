@@ -28,6 +28,7 @@ public class BandRepository : IBandRepository
         {
             bandDTOs.Add(new BandDTO(
                 (int)reader["Id"],
+                reader["Naam"].ToString(),
                 (int)reader["BandLeider"]
             ));
         }
@@ -37,7 +38,7 @@ public class BandRepository : IBandRepository
 
     public BandDTO GetBandById(int id)
     {
-        BandDTO bandDTO = new BandDTO(0,0);
+        BandDTO bandDTO = new BandDTO(0,string.Empty, 0);
         _connection.Open();
         string query = "Select * FROM Band";
         using MySqlCommand command = new MySqlCommand(query, _connection);
@@ -48,26 +49,30 @@ public class BandRepository : IBandRepository
         {
             bandDTO = new BandDTO(
                 (int)reader["Id"],
-                (int)reader["BandLeider"]
+                reader["Naam"].ToString(),
+				(int)reader["BandLeider"]
             );
         }
 
         if (bandDTO.Id == 0 && bandDTO.BandLeider == 0)
         {
-            throw new ArgumentException("Values not found", nameof(bandDTO));
+	        _connection.Close();
+			throw new ArgumentException("Values not found", nameof(bandDTO));
         }
         else
         {
-            return bandDTO;
+	        _connection.Close();
+			return bandDTO;
         }
     }
 
     public void PostBand(BandDTO band)
     {
         _connection.Open();
-        string query = "INSERT INTO Band (Id, BandLeider) VALUES (@id, @bandLeider)";
+        string query = "INSERT INTO Band (Id, Naam, BandLeider) VALUES (@id, @Naam, @bandLeider)";
         using MySqlCommand command = new MySqlCommand(query, _connection);
         command.Parameters.AddWithValue("@id", band.Id);
+        command.Parameters.AddWithValue("@Naam", band.Name);
         command.Parameters.AddWithValue("@bandLeider", band.BandLeider);
         command.ExecuteNonQuery();
         _connection.Close();
@@ -86,10 +91,11 @@ public class BandRepository : IBandRepository
     public void EditBand(BandDTO band)
     {
         _connection.Open();
-        string query = "UPDATE Band SET BandLeider = @bandLeider WHERE Id = @id";
+        string query = "UPDATE Band SET BandLeider = @bandLeider, Naam = @Naam WHERE Id = @id";
         using MySqlCommand command = new MySqlCommand(query, _connection);
         command.Parameters.AddWithValue("@id", band.Id);
-        command.Parameters.AddWithValue("@bandLeider", band.BandLeider);
+        command.Parameters.AddWithValue("@Naam", band.Name);
+		command.Parameters.AddWithValue("@bandLeider", band.BandLeider);
         command.ExecuteNonQuery();
         _connection.Close();
     }
@@ -107,7 +113,7 @@ public class BandRepository : IBandRepository
         {
             setlistIds.Add((int)reader["Setlist_Id"]);
         }
-
-        return setlistIds;
+        _connection.Close();
+		return setlistIds;
     }
 }

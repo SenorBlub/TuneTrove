@@ -27,8 +27,8 @@ public class NummerSetlistRepository : INummerSetlistRepository
         {
             Setlists.Add((int)reader["Setlist_Id"]);
         }
-
-        return Setlists;
+        _connection.Close();
+		return Setlists;
     }
 
     public List<int> GetNummers(int SetlistId)
@@ -44,8 +44,8 @@ public class NummerSetlistRepository : INummerSetlistRepository
         {
             setlists.Add((int)reader["Nummer_Id"]);
         }
-
-        return setlists;
+        _connection.Close();
+		return setlists;
     }
 
     public void PostConnection(int NummerId, int SetlistId)

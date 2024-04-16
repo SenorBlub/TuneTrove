@@ -27,8 +27,8 @@ public class MuzikantBandRepository : IMuzikantBandRepository
         {
             bands.Add((int)reader["Band_Id"]);
         }
-
-        return bands;
+        _connection.Close();
+		return bands;
     }
 
     public List<int> GetMuzikanten(int bandId)
@@ -44,7 +44,7 @@ public class MuzikantBandRepository : IMuzikantBandRepository
         {
             setlists.Add((int)reader["Muzikant_Id"]);
         }
-
+        _connection.Close();
         return setlists;
     }
 

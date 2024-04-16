@@ -74,7 +74,7 @@ public class SetlistService : ISetlistService
     public void PostSetlist(Setlist setlist)
     {
         foreach(int bandId in setlist.BandIds)
-            _setlistRepository.PostSetlist(new SetlistDTO(setlist), bandId);
+            _setlistRepository.PostSetlist(new SetlistDTO(setlist));
         foreach (int muzikantId in setlist.MuzikantIds)
         {
             _muzikantSetlistRepository.PostConnection(muzikantId, setlist.Id);
@@ -142,6 +142,6 @@ public class SetlistService : ISetlistService
             _bandSetlistRepository.PostConnection(setlist.Id, bandId);
         }
         foreach (int bandId in setlist.BandIds)
-            _setlistRepository.EditSetlist(new SetlistDTO(setlist), bandId);
+            _setlistRepository.EditSetlist(new SetlistDTO(setlist));
     }
 }

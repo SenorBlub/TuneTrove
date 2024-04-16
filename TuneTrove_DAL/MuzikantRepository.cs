@@ -26,7 +26,8 @@ public class MuzikantRepository : IMuzikantRepository
             muzikanten.Add(
                 new MuzikantDTO((int)reader["Id"], reader["Naam"].ToString(), reader["Instrument"].ToString()));
         }
-        return muzikanten;
+        _connection.Close();
+		return muzikanten;
     }
 
     public MuzikantDTO GetMuzikantById(int id)
@@ -92,6 +93,7 @@ public class MuzikantRepository : IMuzikantRepository
             muzikanten.Add(
                 new MuzikantDTO((int)reader["Id"], reader["Naam"].ToString(), reader["Instrument"].ToString()));
         }
-        return muzikanten;
+        _connection.Close();
+		return muzikanten;
     }
 }

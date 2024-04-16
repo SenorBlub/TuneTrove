@@ -11,12 +11,14 @@ public class BandService : IBandService
     private IBandRepository _bandRepository;
     private IMuzikantBandRepository _muzikantBandRepository;
     private ISetlistRepository _setlistRepository;
+    private IBandSetlistRepository _bandSetlistRepository;
 
-    public BandService(IBandRepository bandRepository, IMuzikantBandRepository muzikantBandRepository, ISetlistRepository setlistRepository)
+    public BandService(IBandRepository bandRepository, IMuzikantBandRepository muzikantBandRepository, ISetlistRepository setlistRepository, IBandSetlistRepository bandSetlistRepository)
     {
         _bandRepository = bandRepository;
         _muzikantBandRepository = muzikantBandRepository;
         _setlistRepository = setlistRepository;
+        _bandSetlistRepository = bandSetlistRepository;
     }
 
     public List<Band> GetAllBands()
@@ -32,7 +34,7 @@ public class BandService : IBandService
             }
 
             List<int> setlistList = new List<int>();
-            foreach (int setlistId in _setlistRepository.getSetlistsByBand(bandDTO.Id))
+            foreach (int setlistId in _bandSetlistRepository.GetSetlists(bandDTO.Id))
             {
                 setlistList.Add(setlistId);
             }
@@ -52,7 +54,7 @@ public class BandService : IBandService
         }
 
         List<int> setlistList = new List<int>();
-        foreach (int setlistId in _setlistRepository.getSetlistsByBand(id))
+        foreach (int setlistId in _bandSetlistRepository.GetSetlists(id))
         {
             setlistList.Add(setlistId);
         }
@@ -63,10 +65,14 @@ public class BandService : IBandService
     public void PostBand(Band band)
     {
         _bandRepository.PostBand(new BandDTO(band));
-        foreach (int muzikantId in band.MuzikantIds)
+        if (band.MuzikantIds != null)
         {
-            _muzikantBandRepository.PostConnection(muzikantId, band.Id);
+	        foreach (int muzikantId in band.MuzikantIds)
+	        {
+		        _muzikantBandRepository.PostConnection(muzikantId, band.Id);
+	        }
         }
+        _muzikantBandRepository.PostConnection(band.BandLeider, band.Id);
     }
 
     public void RemoveBand(int id)
@@ -76,7 +82,7 @@ public class BandService : IBandService
             _muzikantBandRepository.RemoveConnection(muzikantId, id);
         }
 
-        foreach (int setlistId in _setlistRepository.getSetlistsByBand(id))
+        foreach (int setlistId in _bandSetlistRepository.GetSetlists(id))
         {
             _setlistRepository.RemoveSetlist(setlistId);
         }

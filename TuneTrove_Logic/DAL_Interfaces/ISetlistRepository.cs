@@ -6,8 +6,7 @@ public interface ISetlistRepository
 {
     List<SetlistDTO> GetAllSetlists();
     SetlistDTO GetSetlistById(int id);
-    void PostSetlist(SetlistDTO setlist, int bandId);
+    void PostSetlist(SetlistDTO setlist);
     void RemoveSetlist(int id);
-    void EditSetlist(SetlistDTO setlist, int bandId);
-    List<int> getSetlistsByBand(int bandId);
+    void EditSetlist(SetlistDTO setlist);
 }

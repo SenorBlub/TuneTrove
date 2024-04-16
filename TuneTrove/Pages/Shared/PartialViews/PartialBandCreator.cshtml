@@ -1,0 +1,75 @@
+﻿@using TuneTrove_Logic.Models
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class="container">
+	<form method="post" asp-page-handler="CreateBand" id="CreateBandMain">
+		<fieldset>
+			<legend> Create Band </legend>
+			<div>
+				<label for="Num" class="form-label">Band Id</label>
+				<input type="number" class="form-control" id="Num" name="Num" />
+			</div>
+			<div>
+				<label for="Name" class="form-label">Band Name</label>
+				<input type="text" class="form-control" id="Name" name="Name" />
+			</div>
+			</fieldset>
+</form>
+	<div>
+		<form method="post" asp-page-handler="CreateBandBandLeider" id="CreateBandBandLeider">
+			<select form="CreateBandBandLeider" name="CreateBandBandLeider">
+				<option value=0>Select a band leader</option>
+				@if (Model.Members != null)
+				{
+					foreach (Muzikant member in Model.Members)
+					{
+						<option value=@member.Id>@member.Name</option>
+					}
+				}
+				else
+				{
+					<option value=1 disabled="">No members found</option>
+				}
+			</select>
+			<input type="submit" form="CreateBandBandLeider" />
+		</form>
+
+		<form method="post" asp-page-handler="MemberIds" id="CreateBandMembers">
+			<select form="CreateBandMembers" name="MemberIds">
+				<option value=0>Select a band Member</option>
+				@if (Model.Members != null)
+				{
+					foreach (Muzikant member in Model.Members)
+					{
+						<option value=@member.Id>@member.Name</option>
+					}
+				}
+				else
+				{
+					<option value=1 disabled="">No members found</option>
+				}
+			</select>
+			<input type="submit" form="CreateBandMembers" />
+		</form>
+
+		<form method="post" asp-page-handler="SetlistIds" id="CreateBandSetlists">
+			<select form="CreateBandSetlists" name="SetlistIds">
+				<option value=0>Select a Setlist</option>
+				@if (Model.Setlists != null)
+				{
+					foreach (Setlist setlist in Model.Setlists)
+					{
+						<option value=@setlist.Id>@setlist.Id</option>
+					}
+				}
+				else
+				{
+					<option value=1 disabled="">No setlists found</option>
+				}
+			</select>
+			<input type="submit" form="CreateBandSetlists" />
+		</form>
+	</div>
+	<input type="submit" form="CreateBandMain" />
+</div>

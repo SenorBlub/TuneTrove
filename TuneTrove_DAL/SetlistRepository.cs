@@ -45,14 +45,13 @@ public class SetlistRepository : ISetlistRepository
         return setlist;
     }
 
-    public void PostSetlist(SetlistDTO setlist, int bandId)
+    public void PostSetlist(SetlistDTO setlist)
     {
         _connection.Open();
-        string query = "INSERT INTO Setlist (Id, Datum, Band_Id) VALUES (@id, @datum, @bandId)";
+        string query = "INSERT INTO Setlist (Id, Datum) VALUES (@id, @datum)";
         using MySqlCommand command = new MySqlCommand(query, _connection);
         command.Parameters.AddWithValue("@id", setlist.Id);
         command.Parameters.AddWithValue("@datum", setlist.Datum);
-        command.Parameters.AddWithValue("@bandId", bandId);
         command.ExecuteNonQuery();
         _connection.Close();
     }
@@ -67,31 +66,15 @@ public class SetlistRepository : ISetlistRepository
         _connection.Close();
     }
 
-    public void EditSetlist(SetlistDTO setlist, int bandId)
+    public void EditSetlist(SetlistDTO setlist)
     {
         _connection.Open();
-        string query = "UPDATE Setlist SET Datum = @datum, Band_Id = @bandId, WHERE Id = @id";
+        string query = "UPDATE Setlist SET Datum = @datum, WHERE Id = @id";
         using MySqlCommand command = new MySqlCommand(query, _connection);
         command.Parameters.AddWithValue("@id", setlist.Id);
         command.Parameters.AddWithValue("@datum", setlist.Datum);
-        command.Parameters.AddWithValue("@bandId", bandId);
         command.ExecuteNonQuery();
         _connection.Close();
     }
 
-    public List<int> getSetlistsByBand(int bandId)
-    {
-        _connection.Open();
-        string query = "SELECT * FROM Setlist WHERE Band_Id = @bandId";
-        using MySqlCommand command = new MySqlCommand(query, _connection);
-        command.Parameters.AddWithValue("@bandId", bandId);
-        using MySqlDataReader reader = command.ExecuteReader();
-        List<int> setlists = new List<int>();
-        while (reader.Read())
-        {
-            setlists.Add((int)reader["Id"]);
-        }
-        _connection.Close();
-        return setlists;
-    }
 }

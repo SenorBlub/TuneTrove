@@ -29,8 +29,8 @@ public class BandSetlistRepository : IBandSetlistRepository
         {
             bands.Add((int)reader["Band_Id"]);
         }
-
-        return bands;
+        _connection.Close();
+		return bands;
     }
 
     public List<int> GetSetlists(int bandId)
@@ -46,8 +46,8 @@ public class BandSetlistRepository : IBandSetlistRepository
         {
             setlists.Add((int)reader["Setlist_Id"]);
         }
-
-        return setlists;
+        _connection.Close();
+		return setlists;
     }
 
     public void PostConnection(int setlistId, int bandId)

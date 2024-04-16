@@ -27,8 +27,8 @@ public class MuzikantSetlistRepository : IMuzikantSetlistRepository
         {
             Setlists.Add((int)reader["Setlist_Id"]);
         }
-
-        return Setlists;
+        _connection.Close();
+		return Setlists;
     }
 
     public List<int> GetMuzikanten(int SetlistId)
@@ -44,8 +44,8 @@ public class MuzikantSetlistRepository : IMuzikantSetlistRepository
         {
             setlists.Add((int)reader["Muzikant_Id"]);
         }
-
-        return setlists;
+        _connection.Close();
+		return setlists;
     }
 
     public void PostConnection(int muzikantId, int SetlistId)
