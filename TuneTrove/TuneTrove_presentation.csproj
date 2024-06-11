@@ -15,6 +15,7 @@
   <ItemGroup>
     <Folder Include="IndexModels\" />
     <Folder Include="Pages\Partials\" />
+    <Folder Include="Pages\Shared\PartialViews\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -23,7 +23,10 @@ public class Setlist
     }
     public int Id { get; set; }
     public DateTime? Datum { get; set; }
-    public List<int> MuzikantIds { get; set; }
-    public List<int> NummerIds { get; set; }
-    public List<int> BandIds { get; set; }
+    public List<int>? MuzikantIds { get; set; }
+    public List<Muzikant>? Muzikanten { get; set; }
+    public List<int>? NummerIds { get; set; }
+    public List<Nummer>? Nummers { get; set; }
+    public List<int>? BandIds { get; set; }
+    public List<Band>? Bands { get; set; }
 }

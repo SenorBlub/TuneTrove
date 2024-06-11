@@ -25,5 +25,6 @@ public class Nummer
     public string Name { get; set; }
     public int Length { get; set; } // length is expressed in seconds
     public string Artiest { get; set; }
-    public List<int> SetlistIds { get; set; }
+    public List<int>? SetlistIds { get; set; }
+    public List<Setlist>? Setlists { get; set; }
 }

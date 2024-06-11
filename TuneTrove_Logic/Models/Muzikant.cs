@@ -27,7 +27,10 @@ public class Muzikant
     public int Id { get; set; }
     public string Name { get; set; }
     public string Instrument { get; set; }
-    public List<int> BandIds { get; set; }
-    public List<int> NummerIds { get; set; }
-    public List<int> SetlistIds { get; set; }
+    public List<int>? BandIds { get; set; }
+    public List<Band>? Bands { get; set; }
+    public List<int>? NummerIds { get; set; }
+    public List<Nummer>? Nummers { get; set; }
+    public List<int>? SetlistIds { get; set; }
+    public List<Setlist>? Setlists { get; set; }
 }

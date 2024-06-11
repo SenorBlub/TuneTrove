@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic.FileIO;
+﻿using System.Runtime;
+using Microsoft.VisualBasic.FileIO;
 using TuneTrove_Logic.DAL_Interfaces;
 using TuneTrove_Logic.DTO;
 using TuneTrove_Logic.Models;
@@ -12,13 +13,17 @@ public class BandService : IBandService
     private IMuzikantBandRepository _muzikantBandRepository;
     private ISetlistRepository _setlistRepository;
     private IBandSetlistRepository _bandSetlistRepository;
+    private IMuzikantService _muzikantService;
+    private ISetlistService _setlistService;
 
-    public BandService(IBandRepository bandRepository, IMuzikantBandRepository muzikantBandRepository, ISetlistRepository setlistRepository, IBandSetlistRepository bandSetlistRepository)
+    public BandService(IBandRepository bandRepository, IMuzikantBandRepository muzikantBandRepository, ISetlistRepository setlistRepository, IBandSetlistRepository bandSetlistRepository, IMuzikantService muzikantService, ISetlistService setlistService)
     {
         _bandRepository = bandRepository;
         _muzikantBandRepository = muzikantBandRepository;
         _setlistRepository = setlistRepository;
         _bandSetlistRepository = bandSetlistRepository;
+        _muzikantService = muzikantService;
+        _setlistService = setlistService;
     }
 
     public List<Band> GetAllBands()
@@ -72,7 +77,7 @@ public class BandService : IBandService
 		        _muzikantBandRepository.PostConnection(muzikantId, band.Id);
 	        }
         }
-        _muzikantBandRepository.PostConnection(band.BandLeider, band.Id);
+        _muzikantBandRepository.PostConnection((int)band.BandLeiderId, band.Id);
     }
 
     public void RemoveBand(int id)
@@ -127,5 +132,24 @@ public class BandService : IBandService
         }
 
         return bands;
+    }
+
+    public Band PopulateBand(Band band)
+    {
+	    band.BandLeider = _muzikantService.GetMuzikantById((int)band.BandLeiderId);
+	    if (band.Muzikanten == null)
+		    band.Muzikanten = new List<Muzikant>();
+	    if (band.Setlists == null)
+		    band.Setlists = new List<Setlist>();
+	    foreach (int muzikantId in band.MuzikantIds)
+	    {
+		    band.Muzikanten.Add(_muzikantService.GetMuzikantById(muzikantId));
+	    }
+
+	    foreach (int setlistId in band.SetlistIds)
+	    {
+            band.Setlists.Add(_setlistService.GetSetlistById(setlistId));
+	    }
+	    return band;
     }
 }

@@ -14,7 +14,7 @@ public class BandDTO
     public BandDTO(Band band)
     {
         Id = band.Id;
-        BandLeider = band.BandLeider;
+        BandLeider = (int)band.BandLeiderId;
         Name = band.Name;
     }
     public int Id { get; set; }

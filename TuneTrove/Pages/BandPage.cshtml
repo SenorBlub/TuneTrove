@@ -4,11 +4,23 @@
 @using TuneTrove_DAL
 @model TuneTrove_presentation.Pages.BandPageModel
 @{
-	ViewData["Title"] = Model.title;
+	ViewData["Title"] = "Band Page";
 }
 
+<h2>Band Page</h2>
+
+<form method="post">
+	<input type="hidden" name="page" value="@Model.PageIndex" />
+	<button type="submit" formaction="/BandPage?handler=PrevPage">Previous</button>
+	<button type="submit" formaction="/BandPage?handler=NextPage">Next</button>
+</form>
+
+<form method="get" action="/CreateBand">
+	<button type="submit">Create New Band</button>
+</form>
+
 <div class="text-center">
-	<h1 class="display-4">@Model.title</h1>
+	<h1 class="display-4">Bands</h1>
 	<p>Temp.</p>
 	<table>
 		<tr>
@@ -19,29 +31,25 @@
 		</tr>
 		@{
 
-			foreach (Band band in Model.Bands)
+			foreach (Band band in Model.BandPage)
 			{
 				<tr>
 					<td>@band.Id</td>
-					<td>@band.BandLeider</td>
+					<td>@band.BandLeider.Name</td>
 					<td>
-						@foreach (int id in band.MuzikantIds)
+						@foreach (Muzikant muzikant in band.Muzikanten)
 						{
-							<p>@id - </p>
+							<p>@muzikant.Name - </p>
 						}
 					</td>
 					<td>					
-						@foreach (int id in band.SetlistIds)
+						@foreach (Setlist setlist in band.Setlists)
 						{
-						    <p>@id - </p>
+							<p>Setlist @setlist.Id </p>
 						}
 					</td>
 				</tr>
 			}
 		}
 	</table>
-
-	@* design for nice looking band creator forms, use partial views too to reuse *@
-	
-	@await Html.PartialAsync("Shared/PartialViews/PartialBandCreator", this.Model)
 </div>

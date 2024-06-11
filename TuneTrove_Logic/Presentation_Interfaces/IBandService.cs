@@ -10,6 +10,6 @@ public interface IBandService
     void PostBand(Band band);
     void RemoveBand(int id);
     void EditBand(Band band);
-
     public List<Band> GetMuzikantRelatedBands(int muzikantId);
+    public Band PopulateBand(Band band);
 }
