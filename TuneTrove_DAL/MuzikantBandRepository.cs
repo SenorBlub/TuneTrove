@@ -62,7 +62,7 @@ public class MuzikantBandRepository : IMuzikantBandRepository
     public void RemoveConnection(int muzikantId, int bandId)
     {
         _connection.Open();
-        string query = "DELETE * FROM MuzikantBand WHERE Band_Id = @bandId AND Muzikant_Id = @muzikantId";
+        string query = "DELETE FROM MuzikantBand WHERE Band_Id = @bandId AND Muzikant_Id = @muzikantId";
         using MySqlCommand command = new MySqlCommand(query, _connection);
         command.Parameters.AddWithValue("@bandId", bandId);
         command.Parameters.AddWithValue("@muzikantId", muzikantId);

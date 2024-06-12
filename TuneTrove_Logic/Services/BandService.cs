@@ -89,37 +89,55 @@ public class BandService : IBandService
 
         foreach (int setlistId in _bandSetlistRepository.GetSetlists(id))
         {
-            _setlistRepository.RemoveSetlist(setlistId);
+            _bandSetlistRepository.RemoveConnection(setlistId, id);
+            if(_setlistService.GetSetlistById(setlistId).BandIds == null)
+                _setlistRepository.RemoveSetlist(setlistId);
         }
         _bandRepository.RemoveBand(id);
     }
 
-    public void EditBand(Band band) 
+    public void EditBand(Band band)
     {
+        // Remove all existing musician connections for the band
         foreach (int muzikantId in _muzikantBandRepository.GetMuzikanten(band.Id))
         {
             _muzikantBandRepository.RemoveConnection(muzikantId, band.Id);
         }
 
+        // Add the new musician connections for the band
         foreach (int muzikantId in band.MuzikantIds)
         {
             _muzikantBandRepository.PostConnection(muzikantId, band.Id);
         }
 
-        foreach (int bandSetlistId in band.SetlistIds)//!TODO right idea, not right execution yet(maybe), what if new band setlist connections added?
+        // Handle setlist connections
+        var existingSetlists = _bandSetlistRepository.GetSetlists(band.Id).ToList();
+        var updatedSetlists = band.SetlistIds;
+
+        // Remove old setlists that are not in the updated list
+        foreach (var existingSetlistId in existingSetlists)
         {
-            bool delete = true;
-            foreach (SetlistDTO setlistId in _setlistRepository.GetAllSetlists())
+            if (!updatedSetlists.Contains(existingSetlistId))
             {
-                if (setlistId.Id == band.Id)
-                    delete = false;
+                _bandSetlistRepository.RemoveConnection(existingSetlistId, band.Id);
+                if(_setlistService.GetSetlistById(existingSetlistId).BandIds == null)
+                    _setlistRepository.RemoveSetlist(existingSetlistId);
             }
-            if(delete)
-                _setlistRepository.RemoveSetlist(bandSetlistId);
         }
 
+        // Add new setlists that are not already in the existing list
+        foreach (var newSetlistId in updatedSetlists)
+        {
+            if (!existingSetlists.Contains(newSetlistId))
+            {
+                _bandSetlistRepository.PostConnection(newSetlistId, band.Id);
+            }
+        }
+
+        // Update the band's core details
         _bandRepository.EditBand(new BandDTO(band));
     }
+
 
     public List<Band> GetMuzikantRelatedBands(int muzikantId)
     {

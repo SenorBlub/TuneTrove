@@ -1,0 +1,78 @@
+﻿@page
+@model TuneTrove_presentation.Pages.EditBandModel
+@{
+    ViewData["Title"] = "Edit Band";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Edit Band</h2>
+
+    <form method="post">
+        <input type="hidden" asp-for="BandId" /> <!-- Ensure BandId is correctly bound here -->
+        <div class="form-group">
+            <label for="Name">Band Name</label>
+            <input type="text" id="Name" name="Name" class="form-control" asp-for="Name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label for="BandLeiderId">Band Leader ID</label>
+            <select id="BandLeiderId" name="BandLeiderId" class="form-control" asp-for="BandLeiderId">
+                <option value="">Select Band Leader</option>
+                @foreach (var id in Model.AvailableBandLeiderIds)
+                {
+                    if (id == Model.BandLeiderId)
+                    {
+                        <option value="@id" selected>@id</option>
+                    }
+                    else
+                    {
+                        <option value="@id">@id</option>
+                    }
+                }
+            </select>
+            <span asp-validation-for="BandLeiderId" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label for="SetlistIds">Setlist IDs</label>
+            <select id="SetlistIds" name="SetlistIds" class="form-control" asp-for="SetlistIds" multiple>
+                @foreach (var id in Model.AvailableSetlistIds)
+                {
+                    if (Model.SetlistIds.Contains(id))
+                    {
+                        <option value="@id" selected>@id</option>
+                    }
+                    else
+                    {
+                        <option value="@id">@id</option>
+                    }
+                }
+            </select>
+            <span asp-validation-for="SetlistIds" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label for="MuzikantIds">Muzikant IDs</label>
+            <select id="MuzikantIds" name="MuzikantIds" class="form-control" asp-for="MuzikantIds" multiple>
+                @foreach (var id in Model.AvailableMuzikantIds)
+                {
+                    if (Model.MuzikantIds.Contains(id))
+                    {
+                        <option value="@id" selected>@id</option>
+                    }
+                    else
+                    {
+                        <option value="@id">@id</option>
+                    }
+                }
+            </select>
+            <span asp-validation-for="MuzikantIds" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a asp-page="/BandPage" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

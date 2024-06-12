@@ -61,7 +61,7 @@ public class MuzikantRepository : IMuzikantRepository
     public void RemoveMuzikant(int id)
     {
         _connection.Open();
-        string query = "DELETE * FROM Muzikant WHERE Id = @id";
+        string query = "DELETE FROM Muzikant WHERE Id = @id";
         using MySqlCommand command = new MySqlCommand(query, _connection);
         command.Parameters.AddWithValue("@id", id);
         command.ExecuteNonQuery();

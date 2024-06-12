@@ -59,7 +59,7 @@ public class SetlistRepository : ISetlistRepository
     public void RemoveSetlist(int id)
     {
         _connection.Open();
-        string query = "DELETE * FROM Setlist WHERE Id = @id";
+        string query = "DELETE FROM Setlist WHERE Id = @id";
         using MySqlCommand command = new MySqlCommand(query, _connection);
         command.Parameters.AddWithValue("@id", id);
         command.ExecuteNonQuery();

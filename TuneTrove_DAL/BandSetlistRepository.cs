@@ -64,7 +64,7 @@ public class BandSetlistRepository : IBandSetlistRepository
     public void RemoveConnection(int setlistId, int bandId)
     {
         _connection.Open();
-        string query = "DELETE * FROM BandSetlist WHERE Band_Id = @bandId AND Setlist_Id = @setlistId";
+        string query = "DELETE FROM BandSetlist WHERE Band_Id = @bandId AND Setlist_Id = @setlistId";
         using MySqlCommand command = new MySqlCommand(query, _connection);
         command.Parameters.AddWithValue("@bandId", bandId);
         command.Parameters.AddWithValue("@setlistId", setlistId);

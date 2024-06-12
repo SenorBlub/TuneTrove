@@ -62,7 +62,7 @@ public class NummerRepository : INummerRepository
     public void RemoveNummer(int id)
     {
         _connection.Open();
-        string query = "DELETE * FROM Nummer WHERE Id = @id";
+        string query = "DELETE FROM Nummer WHERE Id = @id";
         using MySqlCommand command = new MySqlCommand(query, _connection);
         command.Parameters.AddWithValue("@id", id);
         command.ExecuteNonQuery();

@@ -62,7 +62,7 @@ public class NummerSetlistRepository : INummerSetlistRepository
     public void RemoveConnection(int NummerId, int SetlistId)
     {
         _connection.Open();
-        string query = "DELETE * FROM NummerSetlist WHERE Setlist_Id = @SetlistId AND Nummer_Id = @NummerId";
+        string query = "DELETE FROM NummerSetlist WHERE Setlist_Id = @SetlistId AND Nummer_Id = @NummerId";
         using MySqlCommand command = new MySqlCommand(query, _connection);
         command.Parameters.AddWithValue("@SetlistId", SetlistId);
         command.Parameters.AddWithValue("@NummerId", NummerId);

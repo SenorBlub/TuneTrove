@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.text-wrap {
+    word-wrap: break-word;
+}
+
 html {
   font-size: 14px;
 }
@@ -18,5 +22,66 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    background-color: #f8f9fa;
+}
+
+.table td.scrollable {
+    max-width: 250px; /* Adjust as necessary */
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+
+.table th, .table td {
+    vertical-align: middle;
+}
+
+.table td .text-wrap {
+    white-space: normal;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.container h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+.container .display-4 {
+    font-size: 2.5rem;
+}
+
+.table thead th {
+    background-color: #343a40;
+    color: white;
+}
+
+.table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Custom column width */
+.table th.id-col, .table td.id-col {
+    max-width: 50px;
+    width: 50px;
+    word-wrap: break-word;
+}
+
+.table th.name-col, .table td.name-col {
+    max-width: 200px;
+    word-wrap: break-word;
+}
+
+.table th.leader-col, .table td.leader-col {
+    max-width: 150px;
+    word-wrap: break-word;
+}
+
+.table th.muzikanten-col, .table td.muzikanten-col,
+.table th.setlists-col, .table td.setlists-col {
+    max-width: 250px;
+    word-wrap: break-word;
 }

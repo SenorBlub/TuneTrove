@@ -38,10 +38,11 @@ public class BandRepository : IBandRepository
 
     public BandDTO GetBandById(int id)
     {
-        BandDTO bandDTO = new BandDTO(0,string.Empty, 0);
+        BandDTO bandDTO = new BandDTO(id,string.Empty, 0);
         _connection.Open();
-        string query = "Select * FROM Band";
+        string query = "Select * FROM Band WHERE Id = @id";
         using MySqlCommand command = new MySqlCommand(query, _connection);
+        command.Parameters.AddWithValue("@id", id);
 
         using MySqlDataReader reader = command.ExecuteReader();
 
@@ -80,7 +81,7 @@ public class BandRepository : IBandRepository
 
     public void RemoveBand(int id)
     {
-        string query = "DELETE * FROM Band WHERE Id = @id";
+        string query = "DELETE FROM Band WHERE Id = @id";
         _connection.Open();
         using MySqlCommand command = new MySqlCommand(query, _connection);
         command.Parameters.AddWithValue("@id", id);
