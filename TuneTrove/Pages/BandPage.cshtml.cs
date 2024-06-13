@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TuneTrove_Logic.Models;
-using TuneTrove_Logic.Presentation_Interfaces;
+using TuneTrove_Logic.IServices;
 using System.Collections.Generic;
 using System.Diagnostics;
+using TuneTrove_Logic.DTOs;
 
 namespace TuneTrove_presentation.Pages
 {
@@ -16,10 +17,12 @@ namespace TuneTrove_presentation.Pages
             _bandService = bandService;
         }
 
-        public List<Band> BandPage { get; set; }
+        public List<BandDTO> BandPage { get; set; }
 
         [BindProperty]
         public int PageIndex { get; set; } = 0;
+        [BindProperty]
+        public int PageSize { get; set; } = 10;
 
         public void OnGet()
         {
@@ -52,7 +55,7 @@ namespace TuneTrove_presentation.Pages
         {
 
 
-            BandPage = _bandService.GetAllBandsPopulated();
+            BandPage = _bandService.GetBandPage(PageSize, PageIndex);
 
         }
     }

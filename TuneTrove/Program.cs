@@ -1,6 +1,6 @@
-using TuneTrove_DAL;
-using TuneTrove_Logic.DAL_Interfaces;
-using TuneTrove_Logic.Presentation_Interfaces;
+using TuneTrove_DAL.Repositories;
+using TuneTrove_Logic.IRepositories;
+using TuneTrove_Logic.IServices;
 using TuneTrove_Logic.Services;
 
 var builder = WebApplication.CreateBuilder(args);

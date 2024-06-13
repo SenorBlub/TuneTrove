@@ -4,8 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using TuneTrove_Logic.DTOs;
+using TuneTrove_Logic.IServices;
 using TuneTrove_Logic.Models;
-using TuneTrove_Logic.Presentation_Interfaces;
 
 namespace TuneTrove_presentation.Pages
 {
@@ -59,8 +60,8 @@ namespace TuneTrove_presentation.Pages
 				LoadAvailableIds();
 				return Page();
 			}
-			GenerateRandomBandId();
-			var newBand = new Band
+			/*GenerateRandomBandId();
+			var newBand = new BandDTO
 			{
 				Id = BandId,
 				Name = Name,
@@ -69,7 +70,7 @@ namespace TuneTrove_presentation.Pages
 				MuzikantIds = MuzikantIds
 			};
 
-			_bandService.PostBand(newBand);
+			_bandService.PostBand(newBand);*/
 
 			return RedirectToPage("/BandPage");
 		}

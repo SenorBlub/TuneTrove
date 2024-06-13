@@ -1,32 +1,84 @@
-﻿using TuneTrove_Logic.DTO;
+﻿using TuneTrove_Logic.IRepositories;
+using System;
+using System.Collections.Generic;
 
 namespace TuneTrove_Logic.Models;
 
 public class Setlist
 {
-    public Setlist(int id, DateTime? datum, List<int> muzikantIds, List<int> nummerIds, List<int> bandIds)
+    private int _id;
+    private DateTime _date;
+    private Func<List<Muzikant>>? _loadMuzikants;
+    private Func<List<Nummer>>? _loadNummers;
+    private Func<List<Band>>? _loadBands;
+
+    public Setlist(int id, DateTime date)
     {
-        Id = id;
-        Datum = datum;
-        MuzikantIds = muzikantIds;
-        NummerIds = nummerIds;
-        BandIds = bandIds;
+        _id = id;
+        _date = date;
     }
 
-    public Setlist(SetlistDTO setlistDto, List<int> muzikantIds, List<int> nummerIds, List<int> bandIds)
+    public void LoadMuzikants(IMuzikantRepository muzikantSetlistRepository)
     {
-        Id = setlistDto.Id;
-        Datum = setlistDto.Datum;
-        MuzikantIds = muzikantIds;
-        NummerIds = nummerIds;
-        BandIds = bandIds;
+        this._loadMuzikants = () => muzikantSetlistRepository.GetMuzikantsBySetlistId(_id);
     }
-    public int Id { get; set; }
-    public DateTime? Datum { get; set; }
-    public List<int>? MuzikantIds { get; set; }
-    public List<Muzikant>? Muzikanten { get; set; }
-    public List<int>? NummerIds { get; set; }
-    public List<Nummer>? Nummers { get; set; }
-    public List<int>? BandIds { get; set; }
-    public List<Band>? Bands { get; set; }
+
+    public void LoadNummers(INummerRepository nummerSetlistRepository)
+    {
+        this._loadNummers = () => nummerSetlistRepository.GetNummersBySetlistId(_id);
+    }
+
+    public void LoadBands(IBandRepository bandSetlistRepository)
+    {
+        this._loadBands = () => bandSetlistRepository.GetBandsBySetlistId(_id);
+    }
+
+    public List<Muzikant> GiveMuzikants(IMuzikantRepository muzikantRepository)
+    {
+        LoadMuzikants(muzikantRepository);
+        try
+        {
+            return this._loadMuzikants?.Invoke() ?? new List<Muzikant>();
+        }
+        catch
+        {
+            throw new Exception("Data retrieval failed");
+        }
+    }
+
+    public List<Nummer> GiveNummers(INummerRepository nummerRepository)
+    {
+        LoadNummers(nummerRepository);
+        try
+        {
+            return this._loadNummers?.Invoke() ?? new List<Nummer>();
+        }
+        catch
+        {
+            throw new Exception("Data retrieval failed");
+        }
+    }
+
+    public List<Band> GiveBands(IBandRepository bandRepository)
+    {
+        LoadBands(bandRepository);
+        try
+        {
+            return this._loadBands?.Invoke() ?? new List<Band>();
+        }
+        catch
+        {
+            throw new Exception("Data retrieval failed");
+        }
+    }
+
+    public DateTime GiveDate()
+    {
+        return this._date;
+    }
+
+    public int GiveId()
+    {
+        return this._id;
+    }
 }

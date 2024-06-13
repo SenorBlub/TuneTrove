@@ -1,96 +1,115 @@
-﻿using TuneTrove_Logic.DAL_Interfaces;
-using TuneTrove_Logic.DTO;
+﻿using TuneTrove_Logic.DTOs;
+using TuneTrove_Logic.IRepositories;
+using TuneTrove_Logic.IServices;
 using TuneTrove_Logic.Models;
-using TuneTrove_Logic.Presentation_Interfaces;
+using System.Collections.Generic;
 
 namespace TuneTrove_Logic.Services;
-// !TODO no HTTP verbs
+
 public class NummerService : INummerService
 {
-    private INummerRepository _nummerRepository;
-    private INummerSetlistRepository _nummerSetlistRepository;
-    private IMuzikantNummerRepository _muzikantNummerRepository;
+    private readonly INummerRepository _nummerRepository;
+    private readonly INummerSetlistRepository _nummerSetlistRepository;
+    private readonly IMuzikantNummerRepository _muzikantNummerRepository;
+    private readonly IMuzikantRepository _muzikantRepository;
+    private readonly ISetlistRepository _setlistRepository;
+    private readonly IBandRepository _bandRepository;
 
-    public NummerService(INummerRepository nummerRepository, INummerSetlistRepository nummerSetlistRepository, IMuzikantNummerRepository muzikantNummerRepository)
+    public NummerService(INummerRepository nummerRepository, INummerSetlistRepository nummerSetlistRepository, IMuzikantNummerRepository muzikantNummerRepository, IMuzikantRepository muzikantRepository, ISetlistRepository setlistRepository, IBandRepository bandRepository)
     {
+        _nummerRepository = nummerRepository;
         _nummerSetlistRepository = nummerSetlistRepository;
         _muzikantNummerRepository = muzikantNummerRepository;
-        _nummerRepository = nummerRepository;
-    }
-    public List<Nummer> GetAllNummers()
-    {
-        List<Nummer> NummerList = new List<Nummer>();
-        foreach (NummerDTO nummerDto in _nummerRepository.GetAllNummers())
-        {
-            List<int> setlistIds = new List<int>();
-            foreach (int setlistId in _nummerSetlistRepository.GetSetlists(nummerDto.Id))
-            {
-                setlistIds.Add(setlistId);
-            }
-            NummerList.Add(new Nummer(nummerDto, setlistIds));
-        }
-        return NummerList;
+        _bandRepository = bandRepository;
+        _setlistRepository = setlistRepository;
+        _muzikantRepository = muzikantRepository;
     }
 
-    public Nummer GetNummerById(int id)
+    public void AddNummer(NummerDTO nummerDto)
     {
-        List<int> setlistIds = new List<int>();
-        foreach (int setlistId in _nummerSetlistRepository.GetSetlists(id))
-        {
-            setlistIds.Add(setlistId);
-        }
-        return new Nummer(_nummerRepository.GetNummerById(id), setlistIds);
-    }
-
-    public void PostNummer(Nummer nummer)
-    {
-        _nummerRepository.PostNummer(new NummerDTO(nummer));
-        foreach (int setlistId in nummer.SetlistIds)
-        {
-            _nummerSetlistRepository.PostConnection(nummer.Id, setlistId);
-        }
+        var nummer = new Nummer(nummerDto.Id, nummerDto.Name, nummerDto.Length, nummerDto.Artiest);
+        _nummerRepository.AddNummer(nummer);
     }
 
     public void RemoveNummer(int id)
     {
-        foreach (int setlistId in _nummerSetlistRepository.GetSetlists(id))
-        {
-            _nummerSetlistRepository.RemoveConnection(id, setlistId);
-        }
-
-/*        foreach (int muzikantId in _muzikantNummerRepository.GetMuzikanten(id))
-        {
-           _muzikantNummerRepository.RemoveConnection(muzikantId, id); 
-        }*/ //!TODO could do could not do doesnt matter for functonality just means ill get orphaned connections that will show not founds
-        _nummerRepository.RemoveNummer(id);
+        _nummerRepository.DeleteNummer(id);
     }
 
-    public void EditNummer(Nummer nummer)
+    public void RemoveNummer(Nummer nummer)
     {
-        _nummerRepository.EditNummer(new NummerDTO(nummer));
-        foreach (int setlistId in _nummerSetlistRepository.GetSetlists(nummer.Id))
-        {
-            _nummerSetlistRepository.RemoveConnection(nummer.Id, setlistId);
-        }
-
-        foreach (int setlistId in nummer.SetlistIds)
-        {
-            _nummerSetlistRepository.PostConnection(nummer.Id, setlistId);
-        }
+        _nummerRepository.DeleteNummer(nummer.GiveId());
     }
 
-    public List<Nummer> SearchNummer(string query)
+    public void RemoveNummer(NummerDTO nummerDto)
     {
-        List<Nummer> NummerList = new List<Nummer>();
-        foreach (NummerDTO nummerDto in _nummerRepository.SearchNummer(query))
+        _nummerRepository.DeleteNummer(nummerDto.Id);
+    }
+
+    public void UpdateNummer(Nummer nummer)
+    {
+        _nummerRepository.UpdateNummer(nummer, nummer.GiveId());
+    }
+
+    public void UpdateNummer(NummerDTO nummerDto)
+    {
+        var nummer = new Nummer(nummerDto.Id, nummerDto.Name, nummerDto.Length, nummerDto.Artiest);
+        _nummerRepository.UpdateNummer(nummer, nummerDto.Id);
+    }
+
+    public NummerDTO GetNummer(int id)
+    {
+        var nummer = _nummerRepository.GetNummer(id);
+        var setlists = _setlistRepository.GetSetlistsByNummerId(id);
+        var setlistDtos = new List<SetlistDTO>();
+
+        foreach (var setlist in setlists)
         {
-            List<int> setlistIds = new List<int>();
-            foreach (int setlistId in _nummerSetlistRepository.GetSetlists(nummerDto.Id))
+            setlistDtos.Add(new SetlistDTO(setlist.GiveId(), setlist.GiveDate()));
+        }
+
+        return new NummerDTO(nummer.GiveId(), nummer.GiveName(), nummer.GiveLength(), nummer.GiveArtiest(), setlistDtos);
+    }
+
+    public List<NummerDTO> GetAllNummers()
+    {
+        var nummers = _nummerRepository.GetAllNummers();
+        var nummerDtos = new List<NummerDTO>();
+
+        foreach (var nummer in nummers)
+        {
+            var setlists = _setlistRepository.GetSetlistsByNummerId(nummer.GiveId());
+            var setlistDtos = new List<SetlistDTO>();
+
+            foreach (var setlist in setlists)
             {
-                setlistIds.Add(setlistId);
+                setlistDtos.Add(new SetlistDTO(setlist.GiveId(), setlist.GiveDate()));
             }
-            NummerList.Add(new Nummer(nummerDto, setlistIds));
+
+            nummerDtos.Add(new NummerDTO(nummer.GiveId(), nummer.GiveName(), nummer.GiveLength(), nummer.GiveArtiest(), setlistDtos));
         }
-        return NummerList;
+
+        return nummerDtos;
+    }
+
+    public List<NummerDTO> GetNummerPage(int pageSize, int pageNum)
+    {
+        var nummers = _nummerRepository.GetNummerPage(pageSize, pageNum);
+        var nummerDtos = new List<NummerDTO>();
+
+        foreach (var nummer in nummers)
+        {
+            var setlists = _setlistRepository.GetSetlistsByNummerId(nummer.GiveId());
+            var setlistDtos = new List<SetlistDTO>();
+
+            foreach (var setlist in setlists)
+            {
+                setlistDtos.Add(new SetlistDTO(setlist.GiveId(), setlist.GiveDate()));
+            }
+
+            nummerDtos.Add(new NummerDTO(nummer.GiveId(), nummer.GiveName(), nummer.GiveLength(), nummer.GiveArtiest(), setlistDtos));
+        }
+
+        return nummerDtos;
     }
 }

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Microsoft.AspNetCore.Http.Extensions;
 using TuneTrove_Logic.Models;
-using TuneTrove_Logic.Presentation_Interfaces;
+using TuneTrove_Logic.IServices;
 
 namespace TuneTrove_presentation.Pages
 {
@@ -56,17 +56,17 @@ namespace TuneTrove_presentation.Pages
 /*            var request = HttpContext.Request;
             var url = $"{request.Scheme}://{request.Host}{request.Path}{request.QueryString}";*/
 
-            var band = _bandService.GetBandById(id);
+            /*var band = _bandService.GetBandById(id);
             if (band == null)
             {
                 return RedirectToPage("/BandPage");
-            }
+            }*/
 
-            BandId = band.Id;
+            /*BandId = band.Id;
             Name = band.Name;
             BandLeiderId = band.BandLeiderId;
             SetlistIds = band.SetlistIds ?? new List<int>();
-            MuzikantIds = band.MuzikantIds ?? new List<int>();
+            MuzikantIds = band.MuzikantIds ?? new List<int>();*/
 
             LoadAvailableIds();
 
@@ -81,7 +81,7 @@ namespace TuneTrove_presentation.Pages
                 return Page();
             }
 
-            var updatedBand = new Band
+            /*var updatedBand = new Band
             {
                 Id = BandId,
                 Name = Name,
@@ -90,7 +90,7 @@ namespace TuneTrove_presentation.Pages
                 MuzikantIds = MuzikantIds
             };
 
-            _bandService.EditBand(updatedBand);
+            _bandService.EditBand(updatedBand);*/
 
             return RedirectToPage("/BandPage");
         }

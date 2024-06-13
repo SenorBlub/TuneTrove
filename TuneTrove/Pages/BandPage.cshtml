@@ -1,6 +1,7 @@
 ﻿@page
 @using TuneTrove_presentation.Pages
 @using TuneTrove_Logic.Models
+@using TuneTrove_Logic.DTOs
 @model TuneTrove_presentation.Pages.BandPageModel
 @{
     ViewData["Title"] = "Band Page";
@@ -35,20 +36,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (Band band in Model.BandPage)
+                    @foreach (BandDTO band in Model.BandPage)
                     {
                         <tr>
                             <td>@band.Id</td>
                             <td class="text-wrap" style="max-width: 200px; overflow-wrap: break-word;">@band.Name</td>
-                            <td class="text-wrap" style="max-width: 200px; overflow-wrap: break-word;">@band.BandLeider?.Name</td>
+                            <td class="text-wrap" style="max-width: 200px; overflow-wrap: break-word;">@band.Bandleider?.Name</td>
                             <td class="text-wrap" style="max-width: 200px; overflow-wrap: break-word;">
-                                @foreach (Muzikant muzikant in band.Muzikanten)
+                                @foreach (MuzikantDTO muzikant in band.Muzikanten)
                                 {
                                     <div>@muzikant.Name</div>
                                 }
                             </td>
                             <td class="text-wrap" style="max-width: 200px; overflow-wrap: break-word;">
-                                @foreach (Setlist setlist in band.Setlists)
+                                @foreach (SetlistDTO setlist in band.Setlists)
                                 {
                                     <div>Setlist @setlist.Id</div>
                                 }

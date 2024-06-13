@@ -1,30 +1,60 @@
-﻿using TuneTrove_Logic.DTO;
+﻿using TuneTrove_Logic.IRepositories;
+using System;
+using System.Collections.Generic;
 
 namespace TuneTrove_Logic.Models;
 
 public class Nummer
 {
-    public Nummer(int id, string name, int length, string artiest, List<int> setlistIds)
+    private int _id;
+    private string _name;
+    private int _length;
+    private string _artiest;
+    private Func<List<Setlist>>? _loadSetlists;
+
+    public Nummer(int id, string name, int length, string artiest)
     {
-        Id = id;
-        Name = name;
-        Length = length;
-        Artiest = artiest;
-        SetlistIds = setlistIds;
+        _id = id;
+        _name = name;
+        _length = length;
+        _artiest = artiest;
     }
 
-    public Nummer(NummerDTO nummerDto, List<int> setlistIds)
+    public void LoadSetlists(ISetlistRepository nummerSetlistRepository)
     {
-        Id = nummerDto.Id;
-        Name = nummerDto.Name;
-        Length = nummerDto.Length;
-        Artiest = nummerDto.Artiest;
-        SetlistIds = setlistIds;
+        this._loadSetlists = () => nummerSetlistRepository.GetSetlistsByNummerId(_id);
     }
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public int Length { get; set; } // length is expressed in seconds
-    public string Artiest { get; set; }
-    public List<int>? SetlistIds { get; set; }
-    public List<Setlist>? Setlists { get; set; }
+
+    public List<Setlist> GiveSetlists(ISetlistRepository setlistRepository)
+    {
+        LoadSetlists(setlistRepository);
+        try
+        {
+            return this._loadSetlists?.Invoke() ?? new List<Setlist>();
+        }
+        catch
+        {
+            throw new Exception("Data retrieval failed");
+        }
+    }
+
+    public string GiveName()
+    {
+        return this._name;
+    }
+
+    public int GiveLength()
+    {
+        return this._length;
+    }
+
+    public string GiveArtiest()
+    {
+        return this._artiest;
+    }
+
+    public int GiveId()
+    {
+        return this._id;
+    }
 }

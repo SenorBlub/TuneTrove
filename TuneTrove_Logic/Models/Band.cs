@@ -1,47 +1,89 @@
-﻿using TuneTrove_Logic.DTO;
+﻿using TuneTrove_Logic.IRepositories;
 
 namespace TuneTrove_Logic.Models;
 
 public class Band
 {
-    public Band(int id, string name, int bandLeider, List<int> setlistIds, List<int> muzikantIds)
+    private int _id;
+    private string _name;
+    private int _bandLeiderId;
+    private Func<List<Muzikant>>? _loadMuzikants;
+    private Func<List<Setlist>>? _loadSetlists;
+    private Func<Muzikant>? _loadBandleider;
+
+    public Band(int id, string name, int bandLeiderId)
     {
-        Id = id;
-        BandLeiderId = bandLeider;
-        SetlistIds = setlistIds;
-        MuzikantIds = muzikantIds;
-        Name = name;
+        _id = id;
+        _name = name;
+        _bandLeiderId = bandLeiderId;
     }
 
-    public Band(BandDTO bandDto, List<int> muzikantIds, List<int> setlistIds)
+    private void LoadMuzikants(IMuzikantRepository muzikantRepository)
     {
-        Id = bandDto.Id;
-        BandLeiderId = bandDto.BandLeider;
-        MuzikantIds = muzikantIds;
-        SetlistIds = setlistIds;
-        Name = bandDto.Name;
+        this._loadMuzikants = () => muzikantRepository.GetMuzikantsByBandId(_id);
     }
 
-    public Band(BandDTO bandDto, List<Muzikant> muzikanten, List<Setlist> setlists)
+    private void LoadSetlists(ISetlistRepository setlistRepository)
     {
-        Id = bandDto.Id;
-        BandLeiderId = bandDto.BandLeider;
-        Muzikanten= muzikanten;
-        Setlists = setlists;
-        Name = bandDto.Name;
+        this._loadSetlists = () => setlistRepository.GetSetlistsByBandId(_id);
     }
 
-    public Band()
+    private void LoadBandLeider(IMuzikantRepository muzikantRepository)
     {
-
+        this._loadBandleider = () => muzikantRepository.GetMuzikant(_bandLeiderId);
     }
 
-    public int Id { get; set; }
-    public int? BandLeiderId { get; set; }
-    public Muzikant? BandLeider { get; set; }
-    public List<int>? SetlistIds { get; set; }
-    public List<Setlist>? Setlists { get; set; }
-    public List<int>? MuzikantIds { get; set; }
-    public List<Muzikant>? Muzikanten { get; set; }
-    public string Name { get; set; }
+    public Muzikant GiveBandLeider(IMuzikantRepository muzikantRepository)
+    {
+        LoadBandLeider(muzikantRepository);
+        try
+        {
+            return this._loadBandleider.Invoke();
+        }
+        catch
+        {
+            throw new Exception("Data retrieval failed");
+        }
+    }
+
+    public List<Muzikant> GiveMuzikants(IMuzikantRepository muzikantRepository)
+    {
+        LoadMuzikants(muzikantRepository);
+        try
+        {
+            return this._loadMuzikants.Invoke();
+        }
+        catch
+        {
+            throw new Exception("Data retrieval failed");
+        }
+    }
+
+    public List<Setlist> GiveSetlists(ISetlistRepository setlistRepository)
+    {
+        LoadSetlists(setlistRepository);
+        try
+        {
+            return this._loadSetlists.Invoke();
+        }
+        catch
+        {
+            throw new Exception("Data retrieval failed");
+        }
+    }
+
+    public string GiveName()
+    {
+        return this._name;
+    }
+
+    public int GiveBandleiderId()
+    {
+        return this._bandLeiderId;
+    }
+
+    public int GiveId()
+    {
+        return this._id;
+    }
 }

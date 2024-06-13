@@ -1,147 +1,165 @@
-﻿using System.Runtime.CompilerServices;
-using TuneTrove_Logic.DAL_Interfaces;
-using TuneTrove_Logic.DTO;
+﻿using TuneTrove_Logic.DTOs;
+using TuneTrove_Logic.IRepositories;
+using TuneTrove_Logic.IServices;
 using TuneTrove_Logic.Models;
-using TuneTrove_Logic.Presentation_Interfaces;
+using System.Collections.Generic;
 
 namespace TuneTrove_Logic.Services;
-// !TODO no HTTP verbs
+
 public class SetlistService : ISetlistService
 {
-    private ISetlistRepository _setlistRepository;
-    private INummerSetlistRepository _nummerSetlistRepository;
-    private IMuzikantSetlistRepository _muzikantSetlistRepository;
-    private IBandRepository _bandRepository;
-    private IBandSetlistRepository _bandSetlistRepository;
+    private readonly ISetlistRepository _setlistRepository;
+    private readonly INummerSetlistRepository _nummerSetlistRepository;
+    private readonly IMuzikantSetlistRepository _muzikantSetlistRepository;
+    private readonly IBandSetlistRepository _bandSetlistRepository;
+    private readonly IBandRepository _bandRepository;
+    private readonly INummerRepository _nummerRepository;
+    private readonly IMuzikantRepository _muzikantRepository;
 
-    public SetlistService(ISetlistRepository setlistRepository, INummerSetlistRepository nummerSetlistRepository, IMuzikantSetlistRepository muzikantSetlistRepository, IBandRepository bandRepository, IBandSetlistRepository bandSetlistRepository)
+    public SetlistService(ISetlistRepository setlistRepository, INummerSetlistRepository nummerSetlistRepository, IMuzikantSetlistRepository muzikantSetlistRepository, IBandSetlistRepository bandSetlistRepository, IBandRepository bandRepository, INummerRepository nummerRepository, IMuzikantRepository muzikantRepository)
     {
         _setlistRepository = setlistRepository;
         _nummerSetlistRepository = nummerSetlistRepository;
-        _bandRepository = bandRepository;
         _muzikantSetlistRepository = muzikantSetlistRepository;
         _bandSetlistRepository = bandSetlistRepository;
-    }
-    public List<Setlist> GetAllSetlists()
-    {
-        List<Setlist> setlistList = new List<Setlist>();
-        foreach (SetlistDTO setlistDto in _setlistRepository.GetAllSetlists())
-        {
-            List<int> nummerIds = new List<int>();
-            foreach (int nummerId in _nummerSetlistRepository.GetNummers(setlistDto.Id))
-            {
-                nummerIds.Add(nummerId);
-            }
-
-            List<int> muzikantIds = new List<int>();
-            foreach (int muzikantId in _muzikantSetlistRepository.GetMuzikanten(setlistDto.Id))
-            {
-                muzikantIds.Add(muzikantId);
-            }
-
-            List<int> bandIds = new List<int>();
-            foreach (int bandId in _bandSetlistRepository.GetBands(setlistDto.Id))
-            {
-                bandIds.Add(bandId);
-            }
-            setlistList.Add(new Setlist(setlistDto, muzikantIds, nummerIds, bandIds));
-        }
-        return setlistList;
+        _bandRepository = bandRepository;
+        _nummerRepository = nummerRepository;
+        _muzikantRepository = muzikantRepository;
     }
 
-    public Setlist GetSetlistById(int id)
+    public void AddSetlist(SetlistDTO setlistDto)
     {
-        List<int> nummerIds = new List<int>();
-        foreach (int nummerId in _nummerSetlistRepository.GetNummers(id))
-        {
-            nummerIds.Add(nummerId);
-        }
-
-        List<int> muzikantIds = new List<int>();
-        foreach (int muzikantId in _muzikantSetlistRepository.GetMuzikanten(id))
-        {
-            muzikantIds.Add(muzikantId);
-        }
-
-        List<int> bandIds = new List<int>();
-        foreach (int bandId in _bandSetlistRepository.GetBands(id))
-        {
-            bandIds.Add(bandId);
-        }
-        return new Setlist(_setlistRepository.GetSetlistById(id), muzikantIds, nummerIds, bandIds);
-    }
-
-    public void PostSetlist(Setlist setlist)
-    {
-        foreach(int bandId in setlist.BandIds)
-            _setlistRepository.PostSetlist(new SetlistDTO(setlist));
-        foreach (int muzikantId in setlist.MuzikantIds)
-        {
-            _muzikantSetlistRepository.PostConnection(muzikantId, setlist.Id);
-        }
-
-        foreach (int nummerId in setlist.NummerIds)
-        {
-            _nummerSetlistRepository.PostConnection(nummerId, setlist.Id);
-        }
-
-        foreach (int bandId in setlist.BandIds)
-        {
-            _bandSetlistRepository.PostConnection(setlist.Id, bandId);
-        }
+        var setlist = new Setlist(setlistDto.Id, setlistDto.Date);
+        _setlistRepository.AddSetlist(setlist);
     }
 
     public void RemoveSetlist(int id)
     {
-        foreach (int muzikantId in _muzikantSetlistRepository.GetMuzikanten(id))
-        {
-            _muzikantSetlistRepository.RemoveConnection(muzikantId, id);
-        }
-
-        foreach (int nummerId in _nummerSetlistRepository.GetNummers(id))
-        {
-            _nummerSetlistRepository.RemoveConnection(nummerId, id);
-        }
-
-        foreach (int bandId in _bandSetlistRepository.GetBands(id))
-        {
-            _bandSetlistRepository.RemoveConnection(id, bandId);
-        }
-        _setlistRepository.RemoveSetlist(id);
+        _setlistRepository.DeleteSetlist(id);
     }
 
-    public void EditSetlist(Setlist setlist)
+    public void RemoveSetlist(Setlist setlist)
     {
-        foreach (int muzikantId in _muzikantSetlistRepository.GetMuzikanten(setlist.Id))
+        _setlistRepository.DeleteSetlist(setlist.GiveId());
+    }
+
+    public void RemoveSetlist(SetlistDTO setlistDto)
+    {
+        _setlistRepository.DeleteSetlist(setlistDto.Id);
+    }
+
+    public void UpdateSetlist(Setlist setlist)
+    {
+        _setlistRepository.UpdateSetlist(setlist, setlist.GiveId());
+    }
+
+    public void UpdatSetlist(SetlistDTO setlistDto)
+    {
+        var setlist = new Setlist(setlistDto.Id, setlistDto.Date);
+        _setlistRepository.UpdateSetlist(setlist, setlistDto.Id);
+    }
+
+    public SetlistDTO GetSetlist(int id)
+    {
+        var setlist = _setlistRepository.GetSetlist(id);
+        var nummers = _nummerRepository.GetNummersBySetlistId(id);
+        var muzikanten = _muzikantRepository.GetMuzikantsBySetlistId(id);
+        var bands = _bandRepository.GetBandsBySetlistId(id);
+
+        var nummerDtos = new List<NummerDTO>();
+        foreach (var nummer in nummers)
         {
-            _muzikantSetlistRepository.RemoveConnection(muzikantId, setlist.Id);
+            nummerDtos.Add(new NummerDTO(nummer.GiveId(), nummer.GiveName(), nummer.GiveLength(), nummer.GiveArtiest()));
         }
 
-        foreach (int nummerId in _nummerSetlistRepository.GetNummers(setlist.Id))
+        var muzikantDtos = new List<MuzikantDTO>();
+        foreach (var muzikant in muzikanten)
         {
-            _nummerSetlistRepository.RemoveConnection(nummerId, setlist.Id);
+            muzikantDtos.Add(new MuzikantDTO(muzikant.GiveId(), muzikant.GiveName(), muzikant.GiveInstrument()));
         }
 
-        foreach (int bandId in _bandSetlistRepository.GetBands(setlist.Id))
+        var bandDtos = new List<BandDTO>();
+        foreach (var band in bands)
         {
-            _bandSetlistRepository.RemoveConnection(setlist.Id, bandId);
+            var bandLeider = band.GiveBandLeider(_muzikantRepository);
+            var bandLeiderDto = new MuzikantDTO(bandLeider.GiveId(), bandLeider.GiveName(), bandLeider.GiveInstrument());
+            bandDtos.Add(new BandDTO(band.GiveId(), band.GiveName(), bandLeiderDto, new List<MuzikantDTO>(), new List<SetlistDTO>()));
         }
 
-        foreach (int muzikantId in setlist.MuzikantIds)
+        return new SetlistDTO(setlist.GiveId(), setlist.GiveDate(), muzikantDtos, nummerDtos, bandDtos);
+    }
+
+    public List<SetlistDTO> GetAllSetlists()
+    {
+        var setlists = _setlistRepository.GetAllSetlists();
+        var setlistDtos = new List<SetlistDTO>();
+
+        foreach (var setlist in setlists)
         {
-            _muzikantSetlistRepository.PostConnection(muzikantId, setlist.Id);
+            var nummers = _nummerRepository.GetNummersBySetlistId(setlist.GiveId());
+            var muzikanten = _muzikantRepository.GetMuzikantsBySetlistId(setlist.GiveId());
+            var bands = _bandRepository.GetBandsBySetlistId(setlist.GiveId());
+
+            var nummerDtos = new List<NummerDTO>();
+            foreach (var nummer in nummers)
+            {
+                nummerDtos.Add(new NummerDTO(nummer.GiveId(), nummer.GiveName(), nummer.GiveLength(), nummer.GiveArtiest()));
+            }
+
+            var muzikantDtos = new List<MuzikantDTO>();
+            foreach (var muzikant in muzikanten)
+            {
+                muzikantDtos.Add(new MuzikantDTO(muzikant.GiveId(), muzikant.GiveName(), muzikant.GiveInstrument()));
+            }
+
+            var bandDtos = new List<BandDTO>();
+            foreach (var band in bands)
+            {
+                var bandLeider = band.GiveBandLeider(_muzikantRepository);
+                var bandLeiderDto = new MuzikantDTO(bandLeider.GiveId(), bandLeider.GiveName(), bandLeider.GiveInstrument());
+                bandDtos.Add(new BandDTO(band.GiveId(), band.GiveName(), bandLeiderDto, new List<MuzikantDTO>(), new List<SetlistDTO>()));
+            }
+
+            setlistDtos.Add(new SetlistDTO(setlist.GiveId(), setlist.GiveDate(), muzikantDtos, nummerDtos, bandDtos));
         }
 
-        foreach (int nummerId in setlist.NummerIds)
+        return setlistDtos;
+    }
+
+    public List<SetlistDTO> GetSetlistPage(int pageSize, int pageNum)
+    {
+        var setlists = _setlistRepository.GetSetlistPage(pageSize, pageNum);
+        var setlistDtos = new List<SetlistDTO>();
+
+        foreach (var setlist in setlists)
         {
-            _nummerSetlistRepository.PostConnection(nummerId, setlist.Id);
+            var nummers = _nummerRepository.GetNummersBySetlistId(setlist.GiveId());
+            var muzikanten = _muzikantRepository.GetMuzikantsBySetlistId(setlist.GiveId());
+            var bands = _bandRepository.GetBandsBySetlistId(setlist.GiveId());
+
+            var nummerDtos = new List<NummerDTO>();
+            foreach (var nummer in nummers)
+            {
+                nummerDtos.Add(new NummerDTO(nummer.GiveId(), nummer.GiveName(), nummer.GiveLength(), nummer.GiveArtiest()));
+            }
+
+            var muzikantDtos = new List<MuzikantDTO>();
+            foreach (var muzikant in muzikanten)
+            {
+                muzikantDtos.Add(new MuzikantDTO(muzikant.GiveId(), muzikant.GiveName(), muzikant.GiveInstrument()));
+            }
+
+            var bandDtos = new List<BandDTO>();
+            foreach (var band in bands)
+            {
+                var bandLeider = band.GiveBandLeider(_muzikantRepository);
+                var bandLeiderDto = new MuzikantDTO(bandLeider.GiveId(), bandLeider.GiveName(), bandLeider.GiveInstrument());
+                bandDtos.Add(new BandDTO(band.GiveId(), band.GiveName(), bandLeiderDto, new List<MuzikantDTO>(), new List<SetlistDTO>()));
+            }
+
+            setlistDtos.Add(new SetlistDTO(setlist.GiveId(), setlist.GiveDate(), muzikantDtos, nummerDtos, bandDtos));
         }
 
-        foreach (int bandId in setlist.BandIds)
-        {
-            _bandSetlistRepository.PostConnection(setlist.Id, bandId);
-        }
-        foreach (int bandId in setlist.BandIds)
-            _setlistRepository.EditSetlist(new SetlistDTO(setlist));
+        return setlistDtos;
     }
 }
