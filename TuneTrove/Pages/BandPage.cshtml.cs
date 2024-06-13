@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using TuneTrove_Logic.Models;
 using TuneTrove_Logic.Presentation_Interfaces;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace TuneTrove_presentation.Pages
 {
@@ -49,11 +50,10 @@ namespace TuneTrove_presentation.Pages
 
         private void LoadBands()
         {
-            BandPage = new List<Band>(); 
-            foreach (Band band in _bandService.GetAllBands())
-            {
-                BandPage.Add(_bandService.PopulateBand(band));
-            } 
+
+
+            BandPage = _bandService.GetAllBandsPopulated();
+
         }
     }
 }

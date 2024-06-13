@@ -26,12 +26,12 @@
             <table class="table table-striped table-bordered table-hover">
                 <thead class="thead-dark">
                     <tr>
-                        <th>Id</th>
-                        <th class="text-wrap w-25">Band Name</th>
-                        <th class="text-wrap w-25">Band Leader</th>
-                        <th class="text-wrap w-25">Muzikanten</th>
-                        <th class="text-wrap w-25">Setlists</th>
-                        <th>Actions</th>
+                        <th style="width: 5%;">Id</th>
+                        <th style="width: 20%;" class="text-wrap">Band Name</th>
+                        <th style="width: 20%;" class="text-wrap">Band Leader</th>
+                        <th style="width: 20%;" class="text-wrap">Muzikanten</th>
+                        <th style="width: 20%;" class="text-wrap">Setlists</th>
+                        <th style="width: 15%;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,25 +39,25 @@
                     {
                         <tr>
                             <td>@band.Id</td>
-                            <td class="text-wrap">@band.Name</td>
-                            <td class="text-wrap">@band.BandLeider?.Name</td>
-                            <td class="text-wrap">
+                            <td class="text-wrap" style="max-width: 200px; overflow-wrap: break-word;">@band.Name</td>
+                            <td class="text-wrap" style="max-width: 200px; overflow-wrap: break-word;">@band.BandLeider?.Name</td>
+                            <td class="text-wrap" style="max-width: 200px; overflow-wrap: break-word;">
                                 @foreach (Muzikant muzikant in band.Muzikanten)
                                 {
                                     <div>@muzikant.Name</div>
                                 }
                             </td>
-                            <td class="text-wrap">
+                            <td class="text-wrap" style="max-width: 200px; overflow-wrap: break-word;">
                                 @foreach (Setlist setlist in band.Setlists)
                                 {
                                     <div>Setlist @setlist.Id</div>
                                 }
                             </td>
                             <td>
-                                <a href="/EditBand?id=@band.Id" class="btn btn-warning">Edit</a>
+                                <a href="/EditBand?id=@band.Id" class="btn btn-warning btn-sm">Edit</a>
                                 <form method="post" class="d-inline" asp-page-handler="Delete">
                                     <input type="hidden" name="bandId" value="@band.Id" />
-                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                 </form>
                             </td>
                         </tr>

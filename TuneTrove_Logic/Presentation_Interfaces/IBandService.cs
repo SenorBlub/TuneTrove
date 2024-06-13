@@ -6,6 +6,7 @@ namespace TuneTrove_Logic.Presentation_Interfaces;
 public interface IBandService
 {
     List<Band> GetAllBands();
+    List<Band> GetAllBandsPopulated();
     Band GetBandById(int id);
     void PostBand(Band band);
     void RemoveBand(int id);

@@ -22,6 +22,15 @@ public class Band
         Name = bandDto.Name;
     }
 
+    public Band(BandDTO bandDto, List<Muzikant> muzikanten, List<Setlist> setlists)
+    {
+        Id = bandDto.Id;
+        BandLeiderId = bandDto.BandLeider;
+        Muzikanten= muzikanten;
+        Setlists = setlists;
+        Name = bandDto.Name;
+    }
+
     public Band()
     {
 

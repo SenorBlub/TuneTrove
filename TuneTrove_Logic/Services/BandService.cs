@@ -1,4 +1,5 @@
-﻿using System.Runtime;
+﻿using System.Diagnostics;
+using System.Runtime;
 using Microsoft.VisualBasic.FileIO;
 using TuneTrove_Logic.DAL_Interfaces;
 using TuneTrove_Logic.DTO;
@@ -45,6 +46,7 @@ public class BandService : IBandService
             }
             BandList.Add(new Band(bandDTO, muzikantList, setlistList));
         }
+        
         return BandList;
     }
 
@@ -169,5 +171,31 @@ public class BandService : IBandService
             band.Setlists.Add(_setlistService.GetSetlistById(setlistId));
 	    }
 	    return band;
+    }
+
+    public List<Band> GetAllBandsPopulated()
+    {
+        Stopwatch st = Stopwatch.StartNew();
+        
+        List<Band> BandList = new List<Band>();
+        foreach (BandDTO bandDTO in _bandRepository.GetAllBands())
+        {
+
+            List<Muzikant> muzikantList = new List<Muzikant>();
+            foreach (int muzikantId in _muzikantBandRepository.GetMuzikanten(bandDTO.Id))
+            {
+                muzikantList.Add(_muzikantService.GetMuzikantById(muzikantId));
+            }
+
+            List<Setlist> setlistList = new List<Setlist>();
+            foreach (int setlistId in _bandSetlistRepository.GetSetlists(bandDTO.Id))
+            {
+                setlistList.Add(_setlistService.GetSetlistById(setlistId));
+            }
+            BandList.Add(new Band(bandDTO, muzikantList, setlistList));
+        }
+        st.Stop();
+        Console.WriteLine(st.ElapsedMilliseconds);
+        return BandList;
     }
 }
