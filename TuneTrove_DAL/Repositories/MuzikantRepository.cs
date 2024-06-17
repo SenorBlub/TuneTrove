@@ -54,8 +54,9 @@ public class MuzikantRepository : IMuzikantRepository
     {
         Muzikant muzikant = null;
         _connection.Open();
-        string query = "SELECT * FROM Muzikant M";
+        string query = "SELECT * FROM Muzikant M WHERE M.Id = @id";
         using MySqlCommand command = new MySqlCommand(query, _connection);
+        command.Parameters.AddWithValue("@id", id);
         using MySqlDataReader reader = command.ExecuteReader();
         while (reader.Read())
         {

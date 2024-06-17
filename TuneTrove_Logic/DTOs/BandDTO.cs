@@ -24,4 +24,17 @@ public class BandDTO
         Id = id;
         Name = name;
     }
+
+    public BandDTO(int id, string name, MuzikantDTO bandleider, List<MuzikantDTO> muzikanten, List<SetlistDTO> setlists, int notNull)
+    {
+        Id = id;
+        Name = name;
+        Bandleider = bandleider;
+        Muzikanten = muzikanten;
+        Setlists = setlists;
+    }
+
+    public BandDTO()
+    {
+    }
 }

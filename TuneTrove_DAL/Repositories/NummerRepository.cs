@@ -69,7 +69,7 @@ public class NummerRepository : INummerRepository
     public List<Nummer> GetNummersByMuzikantId(int muzikantId)
     {
         _connection.Open();
-        string query = "SELECT * FROM Nummer N CROSS JOIN MuzikantNummer MN ON MN.Nummer_Id = M.Id WHERE MN.Muzikant_Id = @muzikantId";
+        string query = "SELECT * FROM Nummer N CROSS JOIN MuzikantNummer MN ON MN.Nummer_Id = N.Id WHERE MN.Muzikant_Id = @muzikantId";
         using MySqlCommand command = new MySqlCommand(query, _connection);
         command.Parameters.AddWithValue("@muzikantId", muzikantId);
         using MySqlDataReader reader = command.ExecuteReader();
@@ -85,7 +85,7 @@ public class NummerRepository : INummerRepository
     public List<Nummer> GetNummersBySetlistId(int setlistId)
     {
         _connection.Open();
-        string query = "SELECT * FROM Nummer N CROSS JOIN NummerSetlist NS ON NS.Nummer_Id = M.Id WHERE NS.Setlist_Id = @setlistId";
+        string query = "SELECT * FROM Nummer N CROSS JOIN NummerSetlist NS ON NS.Nummer_Id = N.Id WHERE NS.Setlist_Id = @setlistId";
         using MySqlCommand command = new MySqlCommand(query, _connection);
         command.Parameters.AddWithValue("@setlistId", setlistId);
         using MySqlDataReader reader = command.ExecuteReader();

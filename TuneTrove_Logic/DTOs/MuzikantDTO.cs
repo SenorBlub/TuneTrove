@@ -27,4 +27,18 @@ public class MuzikantDTO
         Name = name;
         Instrument = instrument;
     }
+
+    public MuzikantDTO(int id, string name, string instrument, List<BandDTO> bands, List<NummerDTO> nummers, List<SetlistDTO> setlists, int notNull)
+    {
+        Id = id;
+        Name = name;
+        Instrument = instrument;
+        Bands = bands;
+        Nummers = nummers;
+        Setlists = setlists;
+    }
+
+    public MuzikantDTO()
+    {
+    }
 }

@@ -7,66 +7,66 @@
 <div class="container mt-5">
     <h2 class="text-center mb-4">Edit Band</h2>
 
-    <form method="post">
-        <input type="hidden" asp-for="BandId" /> <!-- Ensure BandId is correctly bound here -->
+    <form method="post" asp-page-handler="Edit">
+        <input type="hidden" asp-for="BandId" />
         <div class="form-group">
             <label for="Name">Band Name</label>
             <input type="text" id="Name" name="Name" class="form-control" asp-for="Name" />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label for="BandLeiderId">Band Leader ID</label>
+            <label for="BandLeiderId">Band Leader</label>
             <select id="BandLeiderId" name="BandLeiderId" class="form-control" asp-for="BandLeiderId">
                 <option value="">Select Band Leader</option>
-                @foreach (var id in Model.AvailableBandLeiderIds)
+                @foreach (var leader in Model.AvailableBandLeiders)
                 {
-                    if (id == Model.BandLeiderId)
+                    if (Model.BandLeiderId == leader.Id)
                     {
-                        <option value="@id" selected>@id</option>
+                        <option value="@leader.Id" selected>@leader.Name</option>
                     }
                     else
                     {
-                        <option value="@id">@id</option>
+                        <option value="@leader.Id">@leader.Name</option>
                     }
                 }
             </select>
             <span asp-validation-for="BandLeiderId" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label for="SetlistIds">Setlist IDs</label>
+            <label for="SetlistIds">Setlists</label>
             <select id="SetlistIds" name="SetlistIds" class="form-control" asp-for="SetlistIds" multiple>
-                @foreach (var id in Model.AvailableSetlistIds)
+                @foreach (var setlist in Model.AvailableSetlists)
                 {
-                    if (Model.SetlistIds.Contains(id))
+                    if (Model.SetlistIds.Contains(setlist.Id))
                     {
-                        <option value="@id" selected>@id</option>
+                        <option value="@setlist.Id" selected>@setlist.Id</option>
                     }
                     else
                     {
-                        <option value="@id">@id</option>
+                        <option value="@setlist.Id">@setlist.Id</option>
                     }
                 }
             </select>
             <span asp-validation-for="SetlistIds" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label for="MuzikantIds">Muzikant IDs</label>
+            <label for="MuzikantIds">Muzikanten</label>
             <select id="MuzikantIds" name="MuzikantIds" class="form-control" asp-for="MuzikantIds" multiple>
-                @foreach (var id in Model.AvailableMuzikantIds)
+                @foreach (var muzikant in Model.AvailableMuzikanten)
                 {
-                    if (Model.MuzikantIds.Contains(id))
+                    if (Model.MuzikantIds.Contains(muzikant.Id))
                     {
-                        <option value="@id" selected>@id</option>
+                        <option value="@muzikant.Id" selected>@muzikant.Name</option>
                     }
                     else
                     {
-                        <option value="@id">@id</option>
+                        <option value="@muzikant.Id">@muzikant.Name</option>
                     }
                 }
             </select>
             <span asp-validation-for="MuzikantIds" class="text-danger"></span>
         </div>
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-primary" asp-page-handler="Edit">Save</button>
         <a asp-page="/BandPage" class="btn btn-secondary">Cancel</a>
     </form>
 </div>

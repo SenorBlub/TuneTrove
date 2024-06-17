@@ -26,4 +26,17 @@ public class NummerDTO
         Length = length;
         Artiest = artiest;
     }
+
+    public NummerDTO(int id, string name, int length, string artiest, List<SetlistDTO> setlists, int notNull)
+    {
+        Id = id;
+        Name = name;
+        Length = length;
+        Artiest = artiest;
+        Setlists = setlists;
+    }
+
+    public NummerDTO()
+    {
+    }
 }

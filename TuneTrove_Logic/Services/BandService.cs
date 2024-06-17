@@ -37,7 +37,6 @@ public class BandService : IBandService
         {
             foreach (MuzikantDTO muzikant in band.Muzikanten)
             {
-                _muzikantService.AddMuzikant(muzikant);
                 muzikantIds.Add(muzikant.Id);
             }
         }
@@ -48,7 +47,6 @@ public class BandService : IBandService
         {
             foreach (SetlistDTO setlist in band.Setlists)
             {
-                _setlistService.AddSetlist(setlist);
                 setlistIds.Add(setlist.Id);
             }
         }
@@ -74,8 +72,45 @@ public class BandService : IBandService
 
     public void UpdateBand(BandDTO band)
     {
+        BandDTO oldBand = GetBand(band.Id);
         Band newBand = new Band(band.Id, band.Name, band.Bandleider.Id);
         _bandRepository.UpdateBand(newBand, band.Id);
+
+        if (oldBand.Muzikanten.Count > 0)
+        {
+            foreach (var muzikant in oldBand.Muzikanten)
+            {
+                _muzikantBandRepository.DisconnectMuzikantFromBand(muzikant.Id, oldBand.Id);
+            }
+        }
+
+        if (oldBand.Setlists.Count > 0)
+        {
+            foreach (var setlist in oldBand.Setlists)
+            {
+                _bandSetlistRepository.DisconnectBandFromSetlist(oldBand.Id, setlist.Id);
+            }
+        }
+
+        List<int> muzikantIds = new List<int>();
+        if (band.Muzikanten.Count() > 0)
+        {
+            foreach (MuzikantDTO muzikant in band.Muzikanten)
+            {
+                muzikantIds.Add(muzikant.Id);
+            }
+        }
+        _muzikantBandRepository.ConnectMuzikantenToBand(muzikantIds, band.Id);
+
+        List<int> setlistIds = new List<int>();
+        if (band.Muzikanten.Count() > 0)
+        {
+            foreach (SetlistDTO setlist in band.Setlists)
+            {
+                setlistIds.Add(setlist.Id);
+            }
+        }
+        _bandSetlistRepository.ConnectBandToSetlists(band.Id, setlistIds);
     }
 
     public void UpdateBand(Band band)

@@ -41,8 +41,7 @@ public class BandRepository : IBandRepository
         int offset = pageNum * pageSize;
         List<Band> bands = new List<Band>();
         _connection.Open();
-        string query = "SELECT * FROM Band B " +
-                       "CROSS JOIN MuzikantBand MB ON MB.Band_Id = B.Id LIMIT @pageSize OFFSET @offset";
+        string query = "SELECT * FROM Band B LIMIT @pageSize OFFSET @offset";
 
         using MySqlCommand command = new MySqlCommand(query, _connection);
         command.Parameters.AddWithValue("@pageSize", pageSize);
@@ -65,8 +64,7 @@ public class BandRepository : IBandRepository
     {
         Band band = null;
         _connection.Open();
-        string query = "SELECT * FROM Band B " +
-                       "CROSS JOIN MuzikantBand MB ON MB.Band_Id = B.Id WHERE B.Id = @id";
+        string query = "SELECT * FROM Band B WHERE B.Id = @id";
 
         using MySqlCommand command = new MySqlCommand(query, _connection);
         command.Parameters.AddWithValue("@id", bandId);

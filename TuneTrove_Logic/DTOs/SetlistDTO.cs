@@ -24,4 +24,17 @@ public class SetlistDTO
         Id = id;
         Date = date;
     }
+
+    public SetlistDTO(int id, DateTime date, List<MuzikantDTO> muzikanten, List<NummerDTO> nummers, List<BandDTO> bands, int notNull)
+    {
+        Id = id;
+        Date = date;
+        Muzikanten = muzikanten;
+        Nummers = nummers;
+        Bands = bands;
+    }
+
+    public SetlistDTO()
+    {
+    }
 }
