@@ -31,6 +31,10 @@ public class MuzikantService : IMuzikantService
     {
         var muzikant = new Muzikant(muzikantDto.Id, muzikantDto.Name, muzikantDto.Instrument);
         _muzikantRepository.AddMuzikant(muzikant);
+
+        _muzikantBandRepository.ConnectMuzikantToBands(muzikantDto.Id, muzikantDto.Bands.Select(b => b.Id).ToList());
+        _muzikantNummerRepository.ConnectMuzikantToNummers(muzikantDto.Id, muzikantDto.Nummers.Select(n => n.Id).ToList());
+        _muzikantSetlistRepository.ConnectMuzikantToSetlists(muzikantDto.Id, muzikantDto.Setlists.Select(s => s.Id).ToList());
     }
 
     public void RemoveMuzikant(int id)

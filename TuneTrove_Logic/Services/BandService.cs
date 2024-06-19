@@ -27,11 +27,7 @@ public class BandService : IBandService
     }
     public void AddBand(BandDTO band)
     {
-        if (_muzikantService.GetMuzikant(band.Bandleider.Id) == null)
-        {
-            _muzikantService.AddMuzikant(band.Bandleider);
-        }
-        _bandRepository.AddBand(new Band(band.Id, band.Name, band.Bandleider.Id));
+	    _bandRepository.AddBand(new Band(band.Id, band.Name, band.Bandleider.Id));
         List<int> muzikantIds = new List<int>();
         if (band.Muzikanten.Count() > 0)
         {
@@ -55,6 +51,8 @@ public class BandService : IBandService
 
     public void RemoveBand(int bandId)
     {
+        _muzikantBandRepository.DisconnectFromAllMuzikanten(bandId);
+        _bandSetlistRepository.DisconnectAllFromBand(bandId);
         _bandRepository.DeleteBand(bandId);
     }
 
@@ -172,6 +170,7 @@ public class BandService : IBandService
 
     public List<BandDTO> GetBandPage(int pageSize, int pageNum)
     {
+        pageNum--;
         List<BandDTO> bands = new List<BandDTO>();
         foreach (Band tempBand in _bandRepository.GetBandPage(pageNum, pageSize))
         {

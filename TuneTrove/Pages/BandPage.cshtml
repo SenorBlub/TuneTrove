@@ -13,8 +13,8 @@
     <div class="d-flex justify-content-between mb-3">
         <form method="post" class="d-inline">
             <input type="hidden" name="page" value="@Model.PageIndex" />
-            <button type="submit" formaction="/BandPage?handler=PrevPage" class="btn btn-primary">Previous</button>
-            <button type="submit" formaction="/BandPage?handler=NextPage" class="btn btn-primary">Next</button>
+            <button type="submit" formaction="/BandPage?page=@Model.PrevPage()" class="btn btn-primary">Previous</button>
+            <button type="submit" formaction="/BandPage?page=@Model.NextPage()" class="btn btn-primary">Next</button>
         </form>
         <form method="get" action="/CreateBand" class="d-inline">
             <button type="submit" class="btn btn-success">Create New Band</button>

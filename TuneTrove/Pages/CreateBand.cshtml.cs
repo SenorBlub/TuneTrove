@@ -103,7 +103,7 @@ namespace TuneTrove_presentation.Pages
         {
             AvailableBandLeiders = _muzikantService.GetAllMuzikanten();
             AvailableSetlists = _setlistService.GetAllSetlists();
-            AvailableMuzikanten = _muzikantService.GetAllMuzikanten();
+            AvailableMuzikanten = AvailableBandLeiders;
         }
 
         private void GenerateRandomBandId()

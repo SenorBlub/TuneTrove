@@ -1,0 +1,57 @@
+﻿@page
+@model TuneTrove_presentation.Pages.CreateMuzikantModel
+@{
+	ViewData["Title"] = "Create Muzikant";
+}
+<h2>Create Muzikant</h2>
+
+<form method="post" asp-page-handler="Create">
+	<div class="form-group">
+		<label for="Name">Muzikant Name</label>
+		<input type="text" id="Name" name="Name" class="form-control" asp-for="Name" />
+		<span asp-validation-for="Name" class="text-danger"></span>
+	</div>
+	<div class="form-group">
+		<label for="Name">Instrument</label>
+		<input type="text" id="Instrument" name="Instrument" class="form-control" asp-for="Instrument" />
+		<span asp-validation-for="Instrument" class="text-danger"></span>
+	</div>
+	<div class="form-group">
+		<label for="Setlists">Setlists</label>
+		<select id="Setlists" name="AvailableSetlistIds" class="form-control" asp-for="AvailableSetlistIds" multiple>
+			@foreach (var setlist in Model.Setlists)
+			{
+				<option value="@setlist.Id">Setlist @setlist.Id</option>
+			}
+		</select>
+		<span asp-validation-for="AvailableSetlistIds" class="text-danger"></span>
+	</div>
+	<div class="form-group">
+		<label for="Nummers">Nummers</label>
+		<select id="Nummers" name="AvailableNummerIds" class="form-control" asp-for="AvailableNummerIds" multiple>
+			@foreach (var nummer in Model.Nummers)
+			{
+				<option value="@nummer.Id">@nummer.Name</option>
+			}
+		</select>
+		<span asp-validation-for="AvailableNummerIds" class="text-danger"></span>
+	</div>
+	
+	<div class="form-group">
+		<label for="Bands">Bands</label>
+		<select id="Bands" name="AvailableBandIds" class="form-control" asp-for="AvailableBandIds" multiple>
+			@foreach (var band in Model.Bands)
+			{
+				<option value="@band.Id">@band.Name</option>
+			}
+		</select>
+		<span asp-validation-for="AvailableBandIds" class="text-danger"></span>
+	</div>
+	<button type="submit" class="btn btn-primary" asp-page-handler="Create">Create</button>
+</form>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

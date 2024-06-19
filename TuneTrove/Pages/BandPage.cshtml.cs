@@ -24,24 +24,50 @@ namespace TuneTrove_presentation.Pages
         [BindProperty]
         public int PageSize { get; set; } = 10;
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            if (!int.TryParse(Request.Query["page"], out int page))
+            {
+                page = 0;
+            }
+
+            PageIndex = page;
             LoadBands();
+
+            return Page();
         }
 
-        public void OnPostNextPage()
+        public int NextPage()
         {
+            if (!int.TryParse(Request.Query["page"], out int page))
+            {
+                page = 0;
+            }
+
+            PageIndex = page;
             PageIndex++;
             LoadBands();
+            return PageIndex;
         }
 
-        public void OnPostPrevPage()
+        public int PrevPage()
         {
+            if (!int.TryParse(Request.Query["page"], out int page))
+            {
+                page = 0;
+            }
+
+            PageIndex = page;
             if (PageIndex > 0)
             {
                 PageIndex--;
             }
+            else
+            {
+                PageIndex = 0;
+            }
             LoadBands();
+            return PageIndex;
         }
 
         public IActionResult OnPostDelete(int bandId)

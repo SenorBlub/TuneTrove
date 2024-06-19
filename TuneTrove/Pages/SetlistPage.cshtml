@@ -1,5 +1,74 @@
 ﻿@page
 @using TuneTrove_presentation
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using TuneTrove_Logic.DTOs
 @model TuneTrove_presentation.Pages.SetlistPageModel
 @{
+	ViewData["Title"] = "Setlists Page";
 }
+<div class="container mt-5">
+	<h2 class="text-center mb-4">Setlist Page</h2>
+
+	<div class="d-flex justify-content-between mb-3">
+		<form method="post" class="d-inline">
+			<input type="hidden" name="page" value="@Model.PageIndex" />
+			<button type="submit" formaction="/SetlistPage?page=@Model.PrevPage()" class="btn btn-primary">Previous</button>
+			<button type="submit" formaction="/SetlistPage?page=@Model.NextPage()" class="btn btn-primary">Next</button>
+		</form>
+		<form method="get" action="/CreateSetlist" class="d-inline">
+			<button type="submit" class="btn btn-success">Create New Setlist</button>
+		</form>
+	</div>
+
+	<div class="text-center">
+		<h1 class="display-4">Setlist</h1>
+		<div class="table-responsive">
+			<table class="table table-striped table-bordered table-hover">
+				<thead class="thead-dark">
+					<tr>
+						<th style="width: 5%;">Id</th>
+						<th style="width: 20%;" class="text-wrap">Date</th>
+						<th style="width: 20%;" class="text-wrap">Nummers</th>
+						<th style="width: 20%;" class="text-wrap">Bands</th>
+						<th style="width: 20%;" class="text-wrap">Muzikanten</th>
+						<th style="width: 15%;">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (SetlistDTO setlist in Model.SetlistPage)
+					{
+						<tr>
+							<td>@setlist.Id</td>
+							<td class="text-wrap" style="max-width: 200px; overflow-wrap: break-word;">@setlist.Date</td>
+							<td class="text-wrap" style="max-width: 200px; overflow-wrap: break-word;">
+								@foreach (NummerDTO nummer in setlist.Nummers)
+								{
+									<div>@nummer.Name By @nummer.Artiest - Length: @nummer.Length seconds</div>
+								}
+							</td>
+							<td class="text-wrap" style="max-width: 200px; overflow-wrap: break-word;">
+								@foreach (BandDTO band in setlist.Bands)
+								{
+									<div>@band.Name</div>
+								}
+							</td>
+							<td class="text-wrap" style="max-width: 200px; overflow-wrap: break-word;">
+								@foreach (MuzikantDTO muzikant in setlist.Muzikanten)
+								{
+									<div>@muzikant.Name</div>
+								}
+							</td>
+							<td>
+								<a href="/EditBand?id=@setlist.Id" class="btn btn-warning btn-sm">Edit</a>
+								<form method="post" class="d-inline" asp-page-handler="Delete">
+									<input type="hidden" name="bandId" value="@setlist.Id" />
+									<button type="submit" class="btn btn-danger btn-sm">Delete</button>
+								</form>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

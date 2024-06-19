@@ -38,7 +38,9 @@ public class BandRepository : IBandRepository
 
     public List<Band> GetBandPage(int pageNum, int pageSize)
     {
-        int offset = pageNum * pageSize;
+        int offset = 0;
+        if(pageNum>0)
+             offset = pageNum * pageSize;
         List<Band> bands = new List<Band>();
         _connection.Open();
         string query = "SELECT * FROM Band B LIMIT @pageSize OFFSET @offset";

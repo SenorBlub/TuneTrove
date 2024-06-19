@@ -1,5 +1,64 @@
 ﻿@page
 @using TuneTrove_presentation
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using TuneTrove_Logic.DTOs
 @model TuneTrove_presentation.Pages.NummerPageModel
 @{
+	ViewData["Title"] = "Nummers Page";
 }
+<div class="container mt-5">
+	<h2 class="text-center mb-4">Nummer Page</h2>
+
+	<div class="d-flex justify-content-between mb-3">
+		<form method="post" class="d-inline">
+			<input type="hidden" name="page" value="@Model.PageIndex" />
+			<button type="submit" formaction="/NummerPage?page=@Model.PrevPage()" class="btn btn-primary">Previous</button>
+			<button type="submit" formaction="/NummerPage?page=@Model.NextPage()" class="btn btn-primary">Next</button>
+		</form>
+		<form method="get" action="/CreateNummer" class="d-inline">
+			<button type="submit" class="btn btn-success">Create New Nummer</button>
+		</form>
+	</div>
+
+	<div class="text-center">
+		<h1 class="display-4">Nummer</h1>
+		<div class="table-responsive">
+			<table class="table table-striped table-bordered table-hover">
+				<thead class="thead-dark">
+					<tr>
+						<th style="width: 5%;">Id</th>
+						<th style="width: 20%;" class="text-wrap">Name</th>
+						<th style="width: 20%;" class="text-wrap">Artist</th>
+						<th style="width: 20%;" class="text-wrap">Length</th>
+						<th style="width: 20%;" class="text-wrap">Setlists</th>
+						<th style="width: 15%;">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (NummerDTO nummer in Model.NummerPage)
+					{
+						<tr>
+							<td>@nummer.Id</td>
+							<td class="text-wrap" style="max-width: 200px; overflow-wrap: break-word;">@nummer.Name</td>
+							<td class="text-wrap" style="max-width: 200px; overflow-wrap: break-word;">@nummer.Artiest</td>
+							<td class="text-wrap" style="max-width: 200px; overflow-wrap: break-word;">@nummer.Length seconds</td>
+							<td class="text-wrap" style="max-width: 200px; overflow-wrap: break-word;">
+								@foreach (SetlistDTO setlist in nummer.Setlists)
+								{
+									<div>Setlist @setlist.Id</div>
+								}
+							</td>
+							<td>
+								<a href="/EditBand?id=@nummer.Id" class="btn btn-warning btn-sm">Edit</a>
+								<form method="post" class="d-inline" asp-page-handler="Delete">
+									<input type="hidden" name="bandId" value="@nummer.Id" />
+									<button type="submit" class="btn btn-danger btn-sm">Delete</button>
+								</form>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
